@@ -1,0 +1,130 @@
+---
+title: "TnSeq -- mapping barcoded transposons to genome"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_notebook: 
+    theme: spacelab
+    toc: yes
+---
+
+## Description
+
+This R notebook is a bioinformatics pipeline to map reads from a barcoded transposon library to the genome of a target organism. For background and details regarding the method, see [Wetmore at al., mBio, 2015](https://mbio.asm.org/content/6/3/e00306-15) and [Price et al., Nature, 2018](http://www.nature.com/articles/s41586-018-0124-0)). The initial steps of processing next generation sequencing data was directly adapted from [Morgan Price's Feba repository](https://bitbucket.org/berkeleylab/feba/src/master/), see also `README.md` of this repository.
+
+## Libraries
+
+```{r, message = FALSE}
+library(lattice)
+library(latticeExtra)
+library(latticetools)
+library(tidyverse)
+library(stringi)
+```
+
+## Annotation of mapped reads
+
+As a prerequisite to assign genome-mapped reads to genes (or other coding regions of interest), we have to **prepare a gene table first**. This table serves as input for the script `DesignRandomPool.pl`, see `README.md` for this github repository. This table is nothing more than a slightly trimmed version of the (RefSeq) `*.gff` file that can be downloaded from NCBI genome.
+
+All reference genome tables were already downloaded in `ref/`, and can be imported from there.
+
+```{r, message = FALSE, warning = FALSE}
+# get file names
+filenames = list.files("../ref/", pattern = ".gff$")
+
+# apply trimming function
+df_ref <- lapply(filenames, FUN = function(filename) {
+    
+    # read tables
+    read_tsv(paste0("../ref/", filename), skip = 9, col_names = FALSE) %>%
+    
+    # remove unnecessary rows and columns
+    filter(X3 != "CDS", X3 != "region") %>%
+    select(X1, X4, X5, X7, X3, X9) %>%
+    
+    # set column names
+    rename_with(~ c("scaffoldId", "begin", "end", "strand", "desc", "locus_tag")) %>%
+    
+    # extract old and new locustag
+    mutate(
+      old_locus_tag = stri_extract_first(locus_tag, regex = "H16_[AB][0-9]*|PHG[0-9]*|HPF_[0-9]{5}"),
+      new_locus_tag = stri_extract_first(locus_tag, regex = "(H16|HPF)_RS[0-9]{5}")
+    ) %>%
+    
+    # remove old ID column
+    select(-locus_tag)
+  })
+
+lapply(df_ref, head)
+```
+
+Export the modified tables to `ref/` folder.
+
+```{r}
+# assign new filenames
+names(df_ref) <- gsub(".gff$", "_trimmed.tsv", filenames)
+
+# and save to disk
+silent <- lapply(names(df_ref), function(filename) {
+  write_tsv(df_ref[[filename]], path = paste0("../ref/", filename))
+})
+```
+
+After this, the actions outlined in `README.md` can be performed. This is mainly A) mapping reads to the genome and B) generating a read/barcode pool file (summary) from all mapped reads. These steps are performed using the original perl scripts from Morgan Price.
+
+## Mapping statistics and distribution on genome
+
+The next step is to inpsect basic statistics of transposon insertions and their distribution over the genome.
+
+### Basic statistics
+
+First read in pooled data table and display summary statistics. Remove barcodes without mapped position.
+
+```{r, message = FALSE}
+df_pool <- read_tsv("../data/pool/H16_barcode_pool.tsv") %>%
+  filter(!is.na(pos))
+```
+
+```{r, echo = FALSE, message = FALSE}
+paste("Number of unique barcodes:", nrow(df_pool))
+paste("Number of barcodes with >= 10 reads:", df_pool %>% filter(nTot >= 10) %>% nrow)
+paste("Number of barcodes with only 1 read:", df_pool %>% filter(nTot == 1) %>% nrow)
+paste("Number of barcodes with > 1 position:", df_pool %>% filter(n2 > 0) %>% nrow)
+paste("Number of barcodes on -/+ strand:", df_pool %>% group_by(strand) %>%
+  summarize(n = length(n)) %>% pull(n) %>% paste(collapse = ", "))
+```
+
+Next we can plot the frequency of reads per barcoded transposons.
+
+```{r, message = FALSE}
+histogram(~ nTot | paste("strand:", strand), df_pool,
+  par.settings = custom.colorblind(),
+  between = list(x = 0.5, y = 0.5), xlim = c(-5, 55),
+  xlab = "number of read per barcode", breaks = 20,
+  scales = list(alternating = FALSE),
+  panel = function(x, ...) {
+    panel.grid(h = -1, v = -1, col = grey(0.9))
+    panel.histogram(x, ...)
+  }
+)
+```
+
+
+### Distribution over the genome
+
+```{r}
+xyplot(nTot ~ pos | scaffold,
+  df_pool %>% arrange(pos),
+  par.settings = custom.colorblind(),
+  between = list(x = 0.5, y = 0.5),
+  layout = c(1,3), type = "l", lwd = 1.5,
+  #ylab = expression("q"[S]*" [g h"^-1*" gDCW"^-1*"]"),
+  #xlab = expression('µ [h'^'-1'*']'),
+  scales = list(alternating = FALSE),
+  panel = function(x, y, ...) {
+    panel.grid(h = -1, v = -1, col = grey(0.9))
+    panel.xyplot(x, y, ...)
+  }
+)
+```
+
+Note: for later use function foverlaps to map transposon to gene regions (or vice versa).

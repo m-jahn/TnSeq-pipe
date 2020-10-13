@@ -34,17 +34,16 @@ MapTnSeq.pl [ -debug ] [ -limit maxReads ] [ -minQuality $minQuality ]
 - The fastq file should have phred+33 ("sanger") encoding of quality scores (as in MiSeq or 2012+ HiSeq). If it is named .gz, it will be gunzipped before reading. If it contains paired-end reads, the second read (name matching " 2:") will be ignored.
 
 - The model file contains 1-2 lines. The first line of the model file describes the beginning of the
-read to the junction between the transposon and the genome. For `model_pKMW3` (the associated primer/PCR method), this is:
+read to the junction between the transposon and the genome. For `model_pKMW7` (the associated primer/PCR method), this is:
 
 ```
-nnnnnnCGCCCTGCAGGGATGTCCACGAGGTCTCTNNNNNNNNNNNNNNNNNNNNCGTACGCTGCAGGTCGACGGCCGGCCAGACCGGGGACTTATCAGCCAACCTGT
+nnnnnnCGCCCTGCAGGGATGTCCACGAGGTCTCTNNNNNNNNNNNNNNNNNNNNCGTACGCTGCAGGTCGACGGCCGGCCGGTTGAGATGTGTATAAGAGACAG
 ```
 
-where the beginning nnnnnn means 6 random nucleotides and the 20 Ns are the random barcode. The second line of the model file is optional. It describes the vector's sequence after the inverted repeat (that is, after where the
-junction should be).  This allows MapTnSeq.pl to identify intact vector that did not integrate into the target genome. For instance, in `pKMW3`, this sequence is:
+where the beginning nnnnnn means 6 random nucleotides and the 20 Ns are the random barcode. The second line of the model file is optional. It describes the vector's sequence after the inverted repeat (that is, after where the junction should be).  This allows `MapTnSeq.pl` to identify intact vector that did not integrate into the target genome. For instance, in `model_pKMW7`, this sequence is:
 
 ```
-TATGTGTTGGGTAACGCCAGGGTTTTCCCAGTCACGACGTTGTAAAACGACGGCCAGTGAATTAATTCTTGAAGA
+TCGACGGCTTGGTTTCATCAGCCATCCGCTTGCCCTCATCTGTTACGCCGGCGGTAGCCGGCCAGCCTCGCAGAGC
 ```
 
 - All characters in the model read must be ACGT except for the optional block of n\'s at the front and a block of Ns which represents the barcode.
@@ -63,7 +62,9 @@ TATGTGTTGGGTAACGCCAGGGTTTTCCCAGTCACGACGTTGTAAAACGACGGCCAGTGAATTAATTCTTGAAGA
 
 - Download and copy `blat` executable to the `feba/bin/` directory so that the perl script finds it directly
 
-- in a terminal, run the following command with customized file paths. The following example works with the data contained in this repository.
+- In a terminal, run the following command with customized file paths. The following example works with the data contained in this repository.
+
+- Note: after testing of the different parameters for `MapTnSeq.pl`, none of them made a bigger difference except for reducing `-stepSize` and `-tileSize` from 11 to 7 (+10% reads mapped to genome).
 
 ```
 cd feba/bin/
@@ -71,6 +72,40 @@ cd feba/bin/
 perl MapTnSeq.pl -genome ../../ref/GCF_000009285.1_ASM928v2_genomic.fna -model ../primers/model_pKMW7 -first ../../data/fastq/H16_S2_L001_R1_001.fastq.gz > ../../data/mapped/H16_S2_L001_R1_001.tsv
 ```
 
+
 ## Step 2: Filtering and quality control
 
 Quoted from the Feba repository: `DesignRandomPool.pl` uses the output of `MapTnSeq.pl` to identify barcodes that consistently map to a unique location in the genome. These are the useful barcodes. Ideally, a mutant library has even insertions across the genome; has insertions in most of the protein-coding genes (except the essential ones); has a similar number of reads for insertions in most genes (i.e., no crazy positive selection for loss of a few genes); has insertions on both strands of genes (insertions on only one strand may indicate that the resistance marker's promoter is too weak); has tens of thousands or hundreds of thousands of useful barcodes; and the useful barcodes account for most of the reads.
+
+The syntax for `DesignRandomPool.pl` is:
+```
+DesignRandomPool.pl -pool pool_file -genes genes_table [ -minN $minN ]
+          [ -minFrac $minFrac ] [ -minRatio $minRatio ] [ -maxQBeg $maxQBeg ]
+          MapTnSeq_file1 ... MapTnSeq_fileN
+```
+
+The script identifies the reliably mapped barcodes and writes a pool file, as well as auxilliary files pool.hit (strains per
+gene), pool.unhit (proteins without insertions), pool.surprise.
+
+The MapTnSeq files must be tab-delimited with fields `read, barcode, scaffold, pos, strand, uniq, qBeg, qEnd, score, identity` where qBeg and qEnd are the positions in the read, after the transposon sequence is removed, that match the genome. Gzipped (*.gz) input files are also supported.
+
+The genes table must include the fields `scaffoldId, begin, end, strand, desc` and it should either include only protein-coding genes or it should include the field 'type' with type=1 for protein-coding genes.
+
+**Optional arguments**
+
+- `minN` is the minimum number of "good" reads for a barcode supporting its mapping.  (Good means a unique hit to the genome and qBeg=1.)
+- `minFrac` is the minimum fraction of input reads for the barcode that agree with the preferred mapping.
+- `minRatio` is the minimum ratio of reads for preferred mapping over the 2nd-most-frequent mapping.
+
+**Example**
+
+- Input files are the mapped reads in `data/mapped/*.tsv` and the gene list
+- Note that the perl script calls `../lib/PoolStats.R` at the end which throws errors. Outcommented for now.
+- Option `minN` was set to 1 (instead of 10) to assess distribution of all possible Tn insertions
+- Output is a tab-separated table with one unique transposn/barcode per row, its frequency and other data
+
+```
+perl DesignRandomPool.pl -minN 1 -pool ../../data/pool/H16_barcode_pool.tsv -genes ../../ref/GCF_000009285.1_ASM928v2_genomic_trimmed.tsv ../../data/mapped/H16_S2_L001_R1_001.tsv
+```
+
+----------

@@ -61,7 +61,7 @@ END
     die $usage if !defined $poolfile;
     die $usage if !defined $genesfile;
     die "No such file: $genesfile" unless -e $genesfile;
-    die "minN must be at least 2\n" unless $minN >= 2;
+    die "minN must be at least 1\n" unless $minN >= 1;
 
     my $nMapped = 0; # reads considered
     my $nSkipQBeg = 0; # reads ignored because qBeg > maxQBeg
@@ -212,7 +212,7 @@ END
                          $nReadsForUsable, $nMapped, 100*$nReadsForUsable/($nMapped + 1e-6));
     my $chao = int($totcodes + $f1**2/(2*$f2 + 1));
     print STDERR "Chao2 estimate of #barcodes present (may be inflated for sequencing error): $chao\n";
-    system("$Bin/../lib/PoolStats.R", $poolfile, $genesfile, $nMapped) == 0 || die $!;
+    #system("$Bin/../lib/PoolStats.R", $poolfile, $genesfile, $nMapped) == 0 || die $!;
 }
 
 sub Variants($) {
