@@ -69,7 +69,7 @@ TCGACGGCTTGGTTTCATCAGCCATCCGCTTGCCCTCATCTGTTACGCCGGCGGTAGCCGGCCAGCCTCGCAGAGC
 ```
 cd feba/bin/
 
-perl MapTnSeq.pl -genome ../../ref/GCF_000009285.1_ASM928v2_genomic.fna -model ../primers/model_pKMW7 -first ../../data/fastq/H16_S2_L001_R1_001.fastq.gz > ../../data/mapped/H16_S2_L001_R1_001.tsv
+perl MapTnSeq.pl -stepSize 7 -tileSize 7 -genome ../../ref/GCF_000009285.1_ASM928v2_genomic.fna -model ../primers/model_pKMW7 -first ../../data/fastq/H16_S2_L001_R1_001.fastq.gz > ../../data/mapped/H16_S2_L001_R1_001.tsv
 ```
 
 
