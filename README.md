@@ -108,4 +108,8 @@ The genes table must include the fields `scaffoldId, begin, end, strand, desc` a
 perl DesignRandomPool.pl -minN 1 -pool ../../data/pool/H16_barcode_pool.tsv -genes ../../ref/GCF_000009285.1_ASM928v2_genomic_trimmed.tsv ../../data/mapped/H16_S2_L001_R1_001.tsv
 ```
 
-----------
+## Step 3: Transposon frequency and distribution
+
+The statistical analysis of transposon insertion frequency and distribution over the genome is performed with a customized R script/notebook without using the tools from Morgan Price lab. The R notebook can be found in `docs/TnSeq-pipe.Rmd` together with the rendered document `docs/TnSeq-pipe.nb.html`.
+
+The rendered R notebook can also be viewed directly *via* github pages using [this link](https://m-jahn.github.io/TnSeq-pipe/TnSeq-pipe.nb.html).

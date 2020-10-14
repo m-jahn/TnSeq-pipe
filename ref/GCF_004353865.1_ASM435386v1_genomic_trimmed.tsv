@@ -1,4 +1,4 @@
-scaffoldId	begin	end	strand	desc	old_locus_tag	new_locus_tag
+scaffold	begin	end	strand	desc	old_locus_tag	new_locus_tag
 NZ_CP037867.1	1	1407	+	gene	HPF_00005	HPF_RS00005
 NZ_CP037867.1	1540	2646	+	gene	HPF_00010	HPF_RS00010
 NZ_CP037867.1	2817	5354	+	gene	HPF_00015	HPF_RS00015

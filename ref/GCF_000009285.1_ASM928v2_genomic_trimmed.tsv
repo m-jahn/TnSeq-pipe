@@ -1,4 +1,4 @@
-scaffoldId	begin	end	strand	desc	old_locus_tag	new_locus_tag
+scaffold	begin	end	strand	desc	old_locus_tag	new_locus_tag
 NC_008313.1	689	2455	+	gene	H16_A0001	H16_RS00005
 NC_008313.1	2823	3938	+	gene	H16_A0002	H16_RS00010
 NC_008313.1	4168	6693	+	gene	H16_A0003	H16_RS00015
