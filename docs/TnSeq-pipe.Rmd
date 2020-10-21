@@ -73,7 +73,7 @@ silent <- lapply(names(df_ref), function(filename) {
 })
 ```
 
-After this, the actions outlined in `README.md` can be performed. This is mainly A) mapping reads to the genome and B) generating a read/barcode pool file (summary) from all mapped reads. These steps are performed using the original perl scripts from Morgan Price.
+After this, the actions outlined in `README.md` can be performed. This is mainly A) mapping reads to the genome and B) generating a read/barcode pool file (summary) from all mapped reads. These steps are performed using the original `perl` scripts from Morgan Price.
 
 ## Mapping statistics and distribution on genome
 
@@ -81,10 +81,17 @@ The next step is to inspect basic statistics of transposon insertions and their 
 
 ### Basic statistics
 
-First read in pooled data table and display summary statistics. Remove barcodes without mapped position.
+First read in a pooled data table and display summary statistics. Remove barcodes without mapped position.
 
 ```{r, message = FALSE}
-df_pool <- read_tsv("../data/pool/H16_barcode_pool.tsv") %>%
+# set working directory
+wd_path <- "../data/"
+
+# set pool file name
+pool_file <- paste0(wd_path, "pool/H16_barcode_pool.tsv")
+
+# import
+df_pool <- read_tsv(pool_file) %>%
   filter(!is.na(pos))
 ```
 
@@ -101,7 +108,7 @@ paste("Number of barcodes on -/+ strand:", df_pool %>% group_by(strand) %>%
 Next we can plot the frequency of reads per barcoded transposons.
 
 ```{r, message = FALSE}
-histogram(~ log2(nTot) | paste("strand:", strand), df_pool,
+plot_reads_per_bc <- histogram(~ log2(nTot) | paste("strand:", strand), df_pool,
   par.settings = custom.colorblind(), breaks = 8,
   between = list(x = 0.5, y = 0.5), xlim = c(-0.5, 7.5),
   xlab = expression("log"[2]*" reads per barcode"),
@@ -111,6 +118,8 @@ histogram(~ log2(nTot) | paste("strand:", strand), df_pool,
     panel.histogram(x, ...)
   }
 )
+
+print(plot_reads_per_bc)
 ```
 
 
@@ -121,7 +130,7 @@ histogram(~ log2(nTot) | paste("strand:", strand), df_pool,
 Each transposon insertion is indexed with a position on the genome. We can now plot insertion frequency over the genome. There are different ways to do that depending on how the data is treated. The most simple case (as done below) plotting the number of reads per transposon versus its insertion site on the genome, broken down by chromosome type ('scaffold').
 
 ```{r}
-xyplot(nTot ~ pos | scaffold,
+plot_reads_on_genome <- xyplot(nTot ~ pos | scaffold,
   df_pool %>% arrange(pos),
   par.settings = custom.colorblind(),
   between = list(x = 0.5, y = 0.5),
@@ -132,6 +141,8 @@ xyplot(nTot ~ pos | scaffold,
     panel.xyplot(x, y, ...)
   }
 )
+
+print(plot_reads_on_genome)
 ```
 
 **Tn insertion frequency over genome**
@@ -139,7 +150,7 @@ xyplot(nTot ~ pos | scaffold,
 However this does not really reflect the actual insertion *frequency*. For the frequency, what matters is the number of different, unique insertions per kb of the genome. We can apply a density function or generate a rolling mean to evaluate frequency. For the density function, we use a bandwidth of 1000 bp or 10,000 bp 'windows' that gives a good smoothing. However the Y axis ('density') should not be confused with the frequency (we can use a histogram instead).
 
 ```{r}
-densityplot( ~ pos | scaffold,
+plot_Tns_on_genome <- densityplot( ~ pos | scaffold,
   df_pool %>% arrange(pos), bw = 10000,
   par.settings = custom.colorblind(),
   between = list(x = 0.5, y = 0.5),
@@ -150,6 +161,8 @@ densityplot( ~ pos | scaffold,
     panel.densityplot(x, plot.points = FALSE, ...)
   }
 )
+
+print(plot_Tns_on_genome)
 ```
 
 ### Mapping barcodes to genes
@@ -220,7 +233,7 @@ df_pool_annotated %>%
 **Insertions per gene**
 
 ```{r, message = FALSE}
-df_pool_annotated %>% 
+plot_insertions_per_gene <- df_pool_annotated %>% 
   filter(key == "pos1", !is.na(old_locus_tag)) %>%
   group_by(old_locus_tag) %>%
   summarize(n_barcodes = length(unique(barcode))) %>%
@@ -233,6 +246,8 @@ df_pool_annotated %>%
     panel.histogram(x, ...)
   }
 )
+
+print(plot_insertions_per_gene)
 ```
 
 ----------
@@ -248,3 +263,28 @@ df_pool_annotated %>%
 ```
 
 ----------
+
+## Export result tables and figures
+
+Export the annotated pool file containing the final barcodes and their locations in the genome.
+
+```{r}
+# create new file name
+pool_file_annotated <- gsub(".tsv", "_annotated.tsv", pool_file)
+
+# save to disk
+write_tsv(df_pool_annotated, path = pool_file_annotated)
+```
+
+Export figures to `*.svg` image files.
+
+```{r}
+for (plots in c("plot_insertions_per_gene", "plot_reads_on_genome", 
+  "plot_reads_per_bc", "plot_Tns_on_genome")) {
+  
+  svg(filename = paste0(wd_path, "../images/", plots, ".svg"), width = 6, height = 4)
+  print(get(plots))
+  dev.off()
+}
+```
+
