@@ -372,15 +372,15 @@ summary {
 <h2>Description</h2>
 <p>The purpose of the following guide is to provide a simple, step-wise procedure for <strong>Tn-Seq data analysis</strong>. Tn-Seq (transposon sequencing) is the mapping of barcoded transposons to positions in a reference genome. This is the first of two major steps when analyzing barcoded transposon libraries. The second step is the extraction, PCR amplification, and sequencing of the already mapped barcodes from a transposon mutant library (see <a href="http://www.nature.com/articles/s41586-018-0124-0">Price et al., Nature, 2018</a>). The initial steps of processing next generation sequencing data was directly adapted from <a href="https://bitbucket.org/berkeleylab/feba/src/master/">Morgan Price’s Feba repository</a>. The user is referred to the Feba repository or the original Tn-BarSeq publications for further information.</p>
 </div>
-<div id="prerequistes" class="section level2">
-<h2>Prerequistes</h2>
+<div id="prerequisites" class="section level2">
+<h2>Prerequisites</h2>
 <ul>
 <li>Linux environment with <code>bash</code>, <code>perl</code> installed</li>
 <li>a DNA alignment software, the default here is <code>blat</code>. It can be downloaded <a href="http://hgdownload.soe.ucsc.edu/downloads.html#source_downloads">here</a></li>
-<li>Perl scripts from M. Price/A. Arkin Lab, Berkeley</li>
+<li>Perl scripts from <a href="https://bitbucket.org/berkeleylab/feba/src/master/">Morgan Price’s Feba repository</a>, A. Arkin lab, Berkeley (see <code>feba/bin/</code>)</li>
 <li><code>Fastq</code> sequencing data as obtained from Illumina runs (see <code>data/fastq</code>)</li>
-<li>Reference genome in <code>.fasta</code> format</li>
-<li>Model file containing the structure of the read, see <code>feba/primers/</code></li>
+<li>Reference genome in <code>.fasta</code> format (see <code>ref/</code>)</li>
+<li>Model file containing the structure of the read (see <code>feba/primers/</code>)</li>
 </ul>
 </div>
 <div id="step-1-read-processing-and-mapping" class="section level2">
@@ -414,9 +414,16 @@ summary {
 <li><p>In a terminal, run the following command with customized file paths. The following example works with the data contained in this repository.</p></li>
 <li><p>Note: after testing of the different parameters for <code>MapTnSeq.pl</code>, none of them made a bigger difference except for reducing <code>-stepSize</code> and <code>-tileSize</code> from 11 to 7 (+10% reads mapped to genome).</p></li>
 </ul>
-<pre><code>cd feba/bin/
-
-perl MapTnSeq.pl -stepSize 7 -tileSize 7 -genome ../../ref/GCF_000009285.1_ASM928v2_genomic.fna -model ../primers/model_pKMW7 -first ../../data/fastq/H16_S2_L001_R1_001.fastq.gz &gt; ../../data/mapped/H16_S2_L001_R1_001.tsv</code></pre>
+<p>Change to script directory.</p>
+<pre><code>cd feba/bin/</code></pre>
+<p>Run mapping script.</p>
+<pre><code>perl MapTnSeq.pl -stepSize 7 -tileSize 7 \
+  -genome ../../ref/GCF_000009285.1_ASM928v2_genomic.fna \
+  -model ../primers/model_pKMW7 \
+  -first ../../data/fastq/H16_S2_L001_R1_001.fastq.gz \
+  -unmapped ../../data/mapped/H16_S2_L001_R1_001_unmapped.txt \
+  -trunc ../../data/mapped/H16_S2_L001_R1_001_truncated.txt \
+  &gt; ../../data/mapped/H16_S2_L001_R1_001.tsv</code></pre>
 </div>
 <div id="step-2-filtering-and-quality-control" class="section level2">
 <h2>Step 2: Filtering and quality control</h2>
@@ -425,9 +432,9 @@ perl MapTnSeq.pl -stepSize 7 -tileSize 7 -genome ../../ref/GCF_000009285.1_ASM92
 <pre><code>DesignRandomPool.pl -pool pool_file -genes genes_table [ -minN $minN ]
           [ -minFrac $minFrac ] [ -minRatio $minRatio ] [ -maxQBeg $maxQBeg ]
           MapTnSeq_file1 ... MapTnSeq_fileN</code></pre>
-<p>The script identifies the reliably mapped barcodes and writes a pool file, as well as auxilliary files pool.hit (strains per gene), pool.unhit (proteins without insertions), pool.surprise.</p>
+<p>The script identifies the reliably mapped barcodes and writes a pool file as output. An external R script writes auxilliary files <code>pool.hit</code> (strains per gene), <code>pool.unhit</code> (proteins without insertions), <code>pool.surprise</code> (?).</p>
 <p>The MapTnSeq files must be tab-delimited with fields <code>read, barcode, scaffold, pos, strand, uniq, qBeg, qEnd, score, identity</code> where qBeg and qEnd are the positions in the read, after the transposon sequence is removed, that match the genome. Gzipped (*.gz) input files are also supported.</p>
-<p>The genes table must include the fields <code>scaffoldId, begin, end, strand, desc</code> and it should either include only protein-coding genes or it should include the field ‘type’ with type=1 for protein-coding genes.</p>
+<p>The genes table must include the fields <code>scaffoldId, begin, end, strand, desc</code> and it should either include only protein-coding genes or it should include the field ‘type’ with type=1 for protein-coding genes. This table was prepared from the default <code>_genomic.gff</code> genes table that can be downloaded for any genome from NCBI together with the fasta file. The creation of the table is described in <code>docs/TnSeq-pipe.Rmd</code> and it was saved as <code>ref/*_genomic_trimmed.tsv</code>.</p>
 <p><strong>Optional arguments</strong></p>
 <ul>
 <li><code>minN</code> is the minimum number of “good” reads for a barcode supporting its mapping. (Good means a unique hit to the genome and qBeg=1.)</li>
@@ -437,15 +444,18 @@ perl MapTnSeq.pl -stepSize 7 -tileSize 7 -genome ../../ref/GCF_000009285.1_ASM92
 <p><strong>Example</strong></p>
 <ul>
 <li>Input files are the mapped reads in <code>data/mapped/*.tsv</code> and the gene list</li>
-<li>Note that the perl script calls <code>../lib/PoolStats.R</code> at the end which throws errors. Outcommented for now.</li>
+<li>Note that the perl script calls <code>../lib/PoolStats.R</code> at the end which throws errors. It was outcommented for now.</li>
 <li>Option <code>minN</code> was set to 1 (instead of 10) to assess distribution of all possible Tn insertions</li>
 <li>Output is a tab-separated table with one unique transposn/barcode per row, its frequency and other data</li>
 </ul>
-<pre><code>perl DesignRandomPool.pl -minN 1 -pool ../../data/pool/H16_barcode_pool.tsv -genes ../../ref/GCF_000009285.1_ASM928v2_genomic_trimmed.tsv ../../data/mapped/H16_S2_L001_R1_001.tsv</code></pre>
+<pre><code>perl DesignRandomPool.pl -minN 1 \
+  -pool ../../data/pool/H16_barcode_pool.tsv \
+  -genes ../../ref/GCF_000009285.1_ASM928v2_genomic_trimmed.tsv \
+  ../../data/mapped/H16_S2_L001_R1_001.tsv</code></pre>
 </div>
 <div id="step-3-transposon-frequency-and-distribution" class="section level2">
 <h2>Step 3: Transposon frequency and distribution</h2>
-<p>The statistical analysis of transposon insertion frequency and distribution over the genome is performed with a customized R script/notebook without using the tools from Morgan Price lab. The R notebook can be found in <code>docs/TnSeq-pipe.Rmd</code> together with the rendered document <code>docs/TnSeq-pipe.nb.html</code>.</p>
+<p>The statistical analysis of transposon insertion frequency and distribution over the genome is performed with a customized <code>R</code> notebook without using the tools from Morgan Price lab. The R notebook can be found in <code>docs/TnSeq-pipe.Rmd</code> together with the rendered output document <code>docs/TnSeq-pipe.nb.html</code>.</p>
 <p>The rendered R notebook can also be viewed directly <em>via</em> github pages using <a href="https://m-jahn.github.io/TnSeq-pipe/TnSeq-pipe.nb.html">this link</a>.</p>
 </div>
 </div>
