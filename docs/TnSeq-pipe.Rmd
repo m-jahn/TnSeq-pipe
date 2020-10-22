@@ -147,20 +147,27 @@ print(plot_reads_on_genome)
 
 **Tn insertion frequency over genome**
 
-However this does not really reflect the actual insertion *frequency*. For the frequency, what matters is the number of different, unique insertions per kb of the genome. We can apply a density function or generate a rolling mean to evaluate frequency. For the density function, we use a bandwidth of 1000 bp or 10,000 bp 'windows' that gives a good smoothing. However the Y axis ('density') should not be confused with the frequency (we can use a histogram instead).
+However this does not really reflect the actual insertion *frequency*. For the frequency, what matters is the number of different, unique insertions per kb of the genome. We can apply a density function or generate a rolling mean to evaluate frequency. Lattice's `densityplot` scales the frequency per location based on the length of x-axis, so it's not suitable to compare insertion frequencies between chromosomes of different length. 
 
-```{r}
-plot_Tns_on_genome <- densityplot( ~ pos | scaffold,
-  df_pool %>% arrange(pos), bw = 10000,
-  par.settings = custom.colorblind(),
-  between = list(x = 0.5, y = 0.5),
-  layout = c(1,3), type = "l", lwd = 1.5,
-  scales = list(alternating = FALSE),
-  panel = function(x, ...) {
-    panel.grid(h = -1, v = -1, col = grey(0.9))
-    panel.densityplot(x, plot.points = FALSE, ...)
-  }
-)
+Instead, we use a defined window of for example 10,000 bp and determine the sum of Tn insertion events per window. Some fo them might be duplicated barcodes because they map to more than one position. However these were still included here since they are often biologically relevant (CBB operon) and are low in number.
+
+```{r, message = FALSE}
+plot_Tns_on_genome <- df_pool %>% arrange(pos) %>%
+  mutate(interval = cut_interval(pos, length = 10000, labels = FALSE)*10000) %>%
+  group_by(scaffold, interval) %>%
+  summarize(tn_frequency = length(pos)) %>%
+  
+  xyplot(tn_frequency ~ interval | scaffold, .,
+    par.settings = custom.colorblind(),
+    ylab = "Tn insertions / 10 kb",
+    between = list(x = 0.5, y = 0.5),
+    layout = c(1,3), type = "l", lwd = 1.5,
+    scales = list(alternating = FALSE),
+    panel = function(x, y, ...) {
+      panel.grid(h = -1, v = -1, col = grey(0.9))
+      panel.xyplot(x, y, ...)
+    }
+  )
 
 print(plot_Tns_on_genome)
 ```
@@ -262,7 +269,30 @@ df_pool_annotated %>%
   arrange(desc(n_barcodes)) %>% slice(1:10)
 ```
 
+
+### Position of transposons within a gene
+
+The mapping of a transposon to a gene also reveals its relative position within the gene. We can use this information to tag insertions as more likely to have a fitness effect, or not. We can also filter out transposons that lie outside the central portion of a gene (e.g. 10% margin to each side), or within a fixed flanking region (e.g. first or last 100 bp). The original FEBA protocol from Morgan Price uses a quality filter that requires transposons be located within the central 80% of a gene. We follow this definition and flag transposon outside the central portion of a gene as unreliable.
+
+```{r}
+# apply margin of 10% gene length
+df_pool_annotated <- df_pool_annotated %>%
+  mutate(
+    gene_length = end-begin, central = between(pos,
+    begin+0.1*gene_length, end-0.1*gene_length, NAbounds = NA)
+  )
+```
+
 ----------
+
+How many transposons are central? We summarize. `NA` are transposons not mapped to a gene.
+
+```{r, message = FALSE}
+df_pool_annotated %>% group_by(central) %>% 
+  summarize(frequence = length(pos))
+```
+
+
 
 ## Export result tables and figures
 
