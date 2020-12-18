@@ -1,0 +1,12 @@
+To cite the software for statistical analysis of RB-TnSeq data, please refer to
+
+Rapid quantification of mutant fitness in diverse bacteria by
+sequencing randomly barcoded transposons (RB-TnSeq).  by K. Wetmore,
+M. Price, R. Waters, J. Lamson, J. He, C. Hoover, M. Blow, J. Bristow,
+G. Butland, A. Arkin, and A. Deutschbauer. (2015) mBio, doi:
+10.1128/mBio.00306-15
+
+http://mbio.asm.org/content/6/3/e00306-15.full
+
+If you are using the fitness browser CGI scripts, just cite the code
+repository. As of July 2016, there is no published description.

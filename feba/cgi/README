@@ -1,0 +1,151 @@
+
+See SETUP for instructions on the files and perl utilities that are
+required for this to work. The key directories are:
+cgi/ -- CGI scripts
+cgi_data/ -- sqlite3 database and BLAST database
+images/ -- accessory files such as images and javascript libraries
+d3js/ -- javascript library for D3.js
+lib/ -- shared functions, especially Utils.pm
+kegg/maps/ -- KEGG metabolic maps
+tmp/ -- temporary files
+jobdata/ -- store results from batch fitness BLAST
+
+Site map:
+
+Top nav bar
+	home => myFrontPage.cgi
+	find gene => geneSearch.cgi => myFitShow.cgi
+	BLAST => blastSearch.cgi  => mySeqSearch.cgi
+	Organisms => orgAll.cgi => org.cgi
+	Experiment => expSearch.cgi => exps.cgi (search), or cond.cgi (for all C/N/stress)
+myFrontPage.cgi -- the front page
+	by gene name => geneSearch.cgi
+	by sequence => blastSearch.cgi
+	by condition => expSearch.cgi
+	organisms => orgAll.cgi
+	various groups of conditions => cond.cgi
+# gene-wise pages
+singleFit.cgi -- show table of fitness data for one gene (if it has data)
+	each experiment => exp.cgi
+        fitness cell => strainTable.cgi
+	for each row, compare => orthFit.cgi
+	add a gene => genesFit.cgi
+	show all => showAll=1 option
+        choose conditions => heatmap.cgi
+	show nearby => genesFit.cgi with around
+	check homologs => mySeqSearch.cgi
+	cofitness => cofit.cgi
+myFitShow.cgi -- show list of matching genes, or forward to singleFit.cgi for a single gene
+	each gene => singleFit.cgi and usually domains.cgi, org => org.cgi
+orthFit.cgi -- for a gene in a condition, show table of fitness across orthologs
+	each cell => strainTable.cgi
+	each gene => showFit.cgi, domains.cgi
+	each experiment => exp.cgi
+	show all homologs => mySeqSearch.cgi
+	across all organisms => orthCond.cgi
+genesFit.cgi -- show fitness of multiple genes or nearby genes
+	each individual gene => myFitShow.cgi
+	each experiment => exp.cgi
+        fitness cell => strainTable.cgi
+	add or remove genes => locusId or addgene options
+	show all => showAll=1 option
+        choose experiments => heatmap.cgi
+heatmap.cgi -- build a heatmap with selected conditions and experiments
+	Mostly links to itself to allow customization of the view.
+        each gene => showFit.cgi, domains.cgi
+	each experiment => exp.cgi
+	top conditions for genes => genesFit.cgi
+	download link => createFitData.cgi
+cofit.cgi -- top cofit hits for a gene
+	each hit => myFitShow.cgi or compareGenes.cgi or domains.cgi
+	checkboxes => genesFit.cgi
+	fitness data (for query gene) => myFitShow.cgi
+	homologs => mySeqSearch.cgi
+domains.cgi -- the proteins page
+	includes domains (PFam/TIGRFam), SwissProt & KEGG best hits, SEED annotations (=> seedsubsystem.cgi),
+        metabolic maps (=> keggmap.cgi) if it has EC numbers,
+        metacyc pathways (=> pathway.cgi) if its MetaCyc best hit links to a pathway reaction or it has a suitable EC number,
+        and the protein sequence
+        [or redirects to geneOverview.cgi if not a protein-coding gene]
+geneOverview.cgi -- the gene overview page
+	links to geneOverview.cgi and domains.cgi for each nearby gene, as well as singleFit.cgi,
+	and links to getNtSeq.cgi for this gene or for this scaffold
+	and link to genomeBrowse.cgi for more flexible browsing
+genomeBrowse.cgi -- genome browser
+	links to singleFit.cgi for the genes
+	and links to getNtSeq.cgi for sequence of region or entire scaffold
+mySeqSearch.cgi -- a list of hits, linking to myFitShow.cgi for each (if it has data), domains.cgi
+	also each organism links to org.cgi
+strainTable.cgi -- the overview graphic and the strain table link to singleFit.cgi
+	Also links to org.cgi, exp.cgi and getNtSeq.cgi
+#
+compareGenes.cgi -- compare fitness of two genes
+	=> geneOverview.cgi and domains.cgi for each gene,
+	exp.cgi for selected experiments (in table),
+	genesFit.cgi (of the same two genes)
+	=> itself (change which comparison to show)
+	=> itself to select which of multiple matching genes to compare to
+        in dynamic table, fitness values => strainTable.cgi
+# experiment-wise pages
+exps.cgi -- matching experiments => exp.cgi
+	across all organisms => orthCond.cgi (if a condition query was made)
+exp.cgi -- for an experiment, show metrics, or top genes, or specific genes
+	if showing specific phenotypes, or important genes, or detrimental genes, then
+		each gene => myFitShow.cgi, domains.cgi; each cell => orthFit.cgi and strainTable.cgi
+	compare to => compareExps.cgi
+	across all organisms => orthCond.cgi
+        keggmaps => keggmap.cgi, keggmaplist.cgi
+        SEED subsystems => seedsubsystem.cgi
+	MetaCyc => pathway.cgi and pathwaysOrg.cgi
+compareExps.cgi -- interactive scatterplot to compare two experiments
+	links to exp.cgi
+	link to itself to change which experiments to show
+	can interactively or programmatically build a gene table
+		link to myFitShow.cgi per gene or genesFit.cgi for multi-gene heatmap
+                or to heatmap builder
+        in dynamic table, fitness values => strainTable.cgi
+        in outlier mode, also => domains.cgi, orthFit.cgi
+	download link => createFitData.cgi or to itself in tsv mode
+# condition-wise pages
+cond.cgi -- list all conditions in a group
+	links to exps.cgi and orthCond.cgi for each condition
+orthCond.cgi -- specific sick genes for a condition across all organisms
+	link to myFitShow.cgi per gene or exp.cgi per experiment
+	link to orthFit.cgi to compare a cell
+# per-organism pages
+org.cgi -- links to experiments (exps.cgi), specific phenotypes (spec.cgi),
+        reannotations (orgReanno.cgi),
+	metabolic maps (keggmap.cgi and keggmaplist.cgi),
+        SEED subsystems (seedsubsystemsOrg.cgi),
+        MetaCyc pathways (pathwaysOrg.cgi)
+	heatmap builder (heatmap.cgi)
+        links to genome browser for each scaffold
+        and downloads
+        (createFitData.cgi, createCofitData.cgi, spec.cgi, createExpData.cgi, orgSeqs.cgi)
+spec.cgi -- specific phenotypes of a certain type for an organism
+	links to condition overview comparison (orthCond.cgi), per-gene pages (singleFit.cgi, domains.cgi),
+	and comparative analysis of gene fitness in a condition (orthFit.cgi)
+        [and to org.cgi]
+orgAll.cgi -- links to org.cgi, exps.cgi, orgReanno.cgi
+# metabolic maps
+keggmap.cgi -- show a kegg map and optionally color code by gene presence and fitness
+	links to organism page (if specified), list of metabolic maps (keggmaplist.cgi),
+        and per-EC links: to singleFit.cgi or genesFit.cgi (if orgId)
+        or else ec number search (myFitShow.cgi)
+seedsubsystem.pl -- show all the genes in a subsystem
+	links to organism page, to gene fitness page (myFitShow.cgi), and to
+        heatmap (genesFit.cgi)
+	Also links to EC # search (myFitShow.cgi) if the role contains an EC #,
+        to help find alternate genes for these steps.
+	And links to exp.cgi and strainTable.cgi if showing fitness data
+seedsubsystemsOrg.cgi -- links to organism page and to
+	seedsubsystem.pl
+pathway.cgi -- show a metacyc pathway and candidate genes
+	links to organism page, to gene fitness page (myFitShow.cgi),
+	and to strain data (strainTable.cgi).
+	Also links to genesFit.cgi for all data for those genes
+	And to pathway.cgi for another organism
+pathwaysOrg.cgi -- list of metacyc pathways
+	links to organism page and to pathway.cgi
+Dead pages:
+getSeq.cgi -- sequence of gene (if it is a protein)

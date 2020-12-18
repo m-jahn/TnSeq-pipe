@@ -1,0 +1,14 @@
+This directory stores metadata about KEGG pathways, taken from the
+MicrobesOnline database. See
+	http://www.microbesonline.org/programmers.html#schema
+for more information.
+
+If you want to use the maps themselves, please download the images
+(png format) into the maps/ subdirectory.  These should be available
+from the KEGG ftp site, see
+
+http://www.genome.jp/kegg/download/Readme/README.pathway
+
+This directory also includes information about ModelSEED reactions so
+as to link SEED roles to KEGG reactions. These were obtained from the
+ModelSEED or from the DOE systems biology knowledgebase.

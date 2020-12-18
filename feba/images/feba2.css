@@ -1,0 +1,882 @@
+/*new color scheme: 
+#00A8C6
+#40C0CB
+#CC0024
+#FFD167
+#FFC126
+*/
+
+/*the entire background of all code*/
+body {
+    font-family: verdana, arial, sans-serif;
+    position: relative;
+    background-color: #E3F1EC; /*#40C0CB;*/
+}
+
+/*main header*/
+H2 {
+    color: #CC0024;
+    /*border-bottom: 1pt solid;*/
+}
+
+/*a subheader*/
+H4 {
+    color: blue;
+}
+
+table {
+/*    border: black thin solid;*/
+	margin: 0 auto;
+	border-top: 3px solid #011B47;
+	border-bottom: 3px solid #011B47;
+	table-layout:fixed;
+	max-width: 100%;
+}
+th,td {
+	border-width: 1px 0px;
+	border-color: lightgrey;
+	border-style: solid;
+/*    border: lightgrey thin solid;*/
+	padding: 5px;
+}
+/*table headers*/
+th {
+	background: #E3F1EC; /*#FFD167;*/
+/*	background-color: #FAE750;*/
+	/*border-top: 3px solid #011B47;*/
+	border-bottom: 2px solid #011B47;
+}
+
+tr,td {
+/*	background-color: white;*/
+/*	-webkit-transition: background-color 0.2s;*/
+}
+
+/*to collapse table on orthCond page*/
+/*tr.header {
+    display: table-row;
+}*/
+
+/*hover effects for tables (line outlines)*/
+tr:hover td, tr.reset2:hover td{
+/*	background-color: rgba(255,255,255,0.2) !important;*/
+	border-width: 1px 0px;
+	border-color: #011B47;
+	border-style: solid;
+/*	font-weight: bold;*/
+/*	-webkit-transition: background-color 0.2s;*/
+}
+
+/*styling to reset the table within the scatterplot*/
+tr.reset td {
+	border-width: 1px 0px;
+	border-color: lightgrey;
+	border-style: solid;
+}
+
+a {
+    /* old made text in yellow-bg tables a bit hard to read: color: #00A8C6; */
+    color: #006886;
+    text-decoration: none;
+    -webkit-transition: color 0.5s;
+	-moz-transition: color 0.5s ease-in-out; 	
+	-ms-transition: color 0.50s ease-in-out;	
+	-o-transition: color 0.50s ease-in-out;
+}
+a:visited {
+	color: #4a1da3;
+}
+a:hover {
+    color: #CC0024; /*#FAE750;*/
+    -webkit-transition: color 0.5s;
+	-moz-transition: color 0.5s ease-in-out; 	
+	-ms-transition: color 0.50s ease-in-out;	
+	-o-transition: color 0.50s ease-in-out;
+}
+
+/*the area with content on the page, including the navigation bar*/
+#page {
+    position: relative;
+/*    background-color: #E3F1EC;*/
+    padding: 0px 30px 40px 0px;
+    color: #011B47;
+    top: -10px;
+    left: -10px;
+    width: 100%;
+	text-align: left;
+}
+
+/*the navigation bar at the top of every page*/
+#nav {
+    position: fixed;
+	z-index: 100;
+    top: 0px;
+    left: -10px;
+/*    margin: 0 auto;*/
+/*    align-content: center;*/
+    width: 101%;
+    list-style-type: none;
+/*    border-top: 3px #011B47 solid;*/
+/*    border-bottom: 3px #011B47 solid;*/
+    min-height: 40px;
+    margin: 0px 40% 20px 10px;
+    background-color: #40C0CB;    /*#00A8C6;*/
+	font-weight: bold;        
+}
+
+/*a box to center the links within the navigation bar*/
+#nav .box {
+    position: relative;
+    margin: 0 auto;
+/*    background-color: black;*/
+    min-height: 40px;
+    /*max-height: 80px;*/
+    max-width: 780px;
+    background-color: #40C0CB;
+	left: 0;
+	display: -webkit-box;      /* OLD - iOS 6-, Safari 3.1-6 */
+  	display: -moz-box;         /* OLD - Firefox 19- (buggy but mostly works) */
+  	display: -ms-flexbox;      /* TWEENER - IE 10 */
+  	display: -webkit-flex;     /* NEW - Chrome */
+  	display: flex; 
+  	flex-wrap: wrap;
+  	align-items: center;
+  	align-content: flex-start;
+}
+
+/*the box for each link on the navigation bar*/
+#nav li {
+    position: relative;
+    text-align: center;
+/*    display: inline;*/
+    float: left;
+    margin: 0 auto;
+    margin-left: 5px;
+    padding: 10px;
+    -webkit-transition: background-color 0.5s;
+	-moz-transition: background-color 0.5s ease-in-out; 	
+	-ms-transition: background-color 0.50s ease-in-out;	
+	-o-transition: background-color 0.50s ease-in-out;
+	flex: 1 1 auto;
+}
+
+#nav li:hover {
+    background-color: #CC0024; /*#00A8C6;*/
+    -webkit-transition: background-color 0.5s;
+	-moz-transition: background-color 0.5s ease-in-out; 	
+	-ms-transition: background-color 0.50s ease-in-out;	
+	-o-transition: background-color 0.50s ease-in-out;
+}
+
+/*link text on the navigation bar*/
+#nav a {
+    color: #011B47;
+}
+
+/*the title of the site (Fitness Browser)*/
+#nav li.header {
+	font-family: serif;
+	font-size: 18px;
+	font-style:italic;
+	font-family: 'Montserrat', sans-serif;
+	color: #FFC126;
+	text-shadow: 1px 1px 1px #000000;
+}
+/*mostly just used to reset styles for just the header*/
+#nav li.header:hover {
+	background-color: #40C0CB;
+	border-bottom: 0px #40C0CB solid;
+	/*height: 0px;*/
+}
+
+/*the content that includes everything except the nav bar. includes tabs.*/
+#main {
+    position: relative;
+    width: 100%;
+    max-width: 1500px;
+	overflow: auto;
+    margin: 0 auto;
+    top: 60px;
+    padding: 20px;
+}
+
+/*container of all tabs for gene/experiment pages*/
+#tabs {
+    /*position: fixed;*/
+    /*z-index: 400;*/
+    /*margin-top: 30px;*/
+    /*margin-left: auto;*/
+    /*margin-right: auto;*/
+    position: relative;
+    margin: 0 auto;
+/*    align-content: center;*/
+    width: 100%;
+    list-style-type: none;
+/*    border-radius: 10px 0px 10px 0px;*/
+/*    border-bottom: 3px #011B47 solid;*/
+    height: 56px;
+	overflow: auto;
+/*	white-space: nowrap;*/
+	text-align: center;
+}
+
+/*style of each tab*/
+#tabs li {
+    position: relative;
+    text-align: center;
+/*    display: inline;*/
+    float: left;
+    margin: 0 auto;
+    margin-left: 5px;
+/*    margin-top: 50px;*/
+    min-width: 13%;
+/*	width: 20%;*/
+    height: 25px;
+    padding: 10px;
+/*    border: 1px #011B47 solid;*/
+    border-radius: 20px 20px 0 0;
+    background-color: #FAEA73;
+    box-shadow: 1px -1px 1px #00A8C6;
+    color: #00A8C6;
+    font-weight: bold;
+    -webkit-transition: background-color 0.5s;
+	-moz-transition: background-color 0.5s ease-in-out; 	
+	-ms-transition: background-color 0.50s ease-in-out;	
+	-o-transition: background-color 0.50s ease-in-out;
+/*    display: table-cell;*/
+	display:inline-block; 
+    vertical-align: middle;
+	word-break: break-all;
+}
+
+/*styling for gene pages. currently by default, default tab styling is same as gene*/
+#tabs li.gene {background-color: #FAEA73;}
+#tabs li.gene:hover{background-color: #f9f6dd;}
+/*styling for experiment pages*/
+#tabs li.exp {background-color: #FFD167;} /*#fac573;}*/
+#tabs li.exp:hover{background-color: #e7dfd2;}
+
+/*current tab*/
+#tabs li.selected {
+/*    background-color: #FAE750 !important;*/
+	background-color: aliceblue !important;
+	border-bottom: 0px;
+    z-index: 30;
+    height: 27px;
+}
+
+/*disabled tabs*/
+#tabs li.disable {
+    background-color: #cadfd7 !important;
+}
+#tabs li.disable a{
+    color: #E3F1EC  !important;
+}
+
+/*link text in tab*/
+#tabs a {
+/*    display: block;*/
+    text-align: center;
+    margin: 0 auto;
+    text-decoration: none;
+/*    text-transform: uppercase;*/
+    -webkit-transition: color 0.5s;
+	-moz-transition: color 0.5s ease-in-out; 	
+	-ms-transition: color 0.50s ease-in-out;	
+	-o-transition: color 0.50s ease-in-out;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+	width: 90%;
+    -webkit-transform: translate(-50%, -50%);
+        -ms-transform: translate(-50%, -50%);
+         -o-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+    color: #011B47;
+	line-height: 15px;
+	float:right;
+	display: inline;
+}
+
+/*hover effects for tabs*/
+#tabs li:hover {
+    background-color: #f9f6dd;
+    -webkit-transition: background-color 0.5s;
+	-moz-transition: background-color 0.5s ease-in-out; 	
+	-ms-transition: background-color 0.50s ease-in-out;	
+	-o-transition: background-color 0.50s ease-in-out;
+}
+
+/*hover effects for links in tabs*/
+#tabs li a:hover {
+/*    color: #E3F1EC;*/
+	color: #CC0024;
+    -webkit-transition: color 0.5s;
+	-moz-transition: color 0.5s ease-in-out; 	
+	-ms-transition: color 0.50s ease-in-out;	
+	-o-transition: color 0.50s ease-in-out;
+}
+
+/*sidebar formerly created to be used with main nav bar, now deprecated*/
+#sidebar {
+    width: 20%;
+    position: absolute;
+    padding: 0px 20px 20px 20px;
+    border: 1px #011B47 solid;
+    background-color: aliceblue;
+    position: fixed;
+    top: 120px;
+}
+#sidebar h3 {
+    border-bottom: 1px #011B47 solid;
+    color: #CC0024;
+}
+
+/*content if there are tabs. included as part of the tabs Util function.*/
+#tabcontent {
+/*    position: absolute;*/
+    top: -20px;
+	left: -5px;
+	z-index: 10;
+/*    width: 75%;*/
+    margin: 0 auto;
+    position: relative;
+/*    left: 24%;*/
+    padding: 10px 20px;
+    margin: 10px;
+    word-wrap: break-word;
+/*    border: 1px #011B47 solid;*/
+    background-color: aliceblue;
+}
+
+/*content if there are no tabs - must be manually written in*/
+#ntcontent {
+/*    position: absolute;*/
+    top: -12px;
+	left: -5px;
+	z-index: 10;
+/*    width: 75%;*/
+    margin: 0 auto;
+    position: relative;
+/*    left: 24%;*/
+    padding: 10px 20px;
+    margin: 10px;
+    word-wrap: break-word;
+/*    border: 1px #011B47 solid;*/
+    background-color: aliceblue;
+    
+}
+
+/*styling of input boxes, text areas*/
+input[type=text], textarea {
+	-webkit-transition: all 0.30s ease-in-out;
+	-moz-transition: all 0.30s ease-in-out;
+	-ms-transition: all 0.30s ease-in-out;
+	-o-transition: all 0.30s ease-in-out;
+	outline: none;
+/*	padding: 3px 0px 3px 3px;*/
+	margin: 5px 1px 3px 0px;
+	border: 1px solid #00A8C6;
+	color: #011B47;
+/*	background-color: aliceblue;*/
+	padding: 5px;
+	border-radius: 5px;
+}
+ 
+/*selected input boxes/text areas*/
+input[type=text]:focus, textarea:focus {
+	box-shadow: 0 0 5px #00A8C6;
+/*	padding: 3px 0px 3px 3px;*/
+	margin: 5px 1px 3px 0px;
+	border: 1px solid #00A8C6;
+	color: #011B47;
+}
+
+/*
+select:hover, select:focus {
+	box-shadow: 0 0 5px #00A8C6;
+	margin: 5px 1px 3px 0px;
+	border: 1px solid #00A8C6;
+	color: #011B47;
+}
+*/
+
+/*tables on front page*/
+table.frontpage {
+	margin: 0 auto;
+	border-collapse: collapse;
+	width: 90%;
+	border: 2px solid #011B47;
+/*	border: 0px;*/
+}
+table.frontpage td{
+	text-align: center;
+/*	border: 1px black solid;*/
+	font-weight: bold;
+	border: lightgrey thin solid;
+	width: 25%;
+/*	height: 50%;*/
+	border-bottom: 1px gray solid;
+}
+
+/*table for each type of search*/
+table.frontpage td.searchbar{width: 20% !important;background-color: #E3F1EC !important;}
+
+table.frontpage th {
+	text-align: center;
+/*	background-color: #00A8C6;*/
+	border: 1px black solid;
+	font-weight: bold;
+	border: lightgrey thin solid;
+	width: 25%;
+	height: 50%;
+	border-bottom: 1px gray solid;
+}
+table.frontpage td {background: #FFFFFF !important;}
+/*table.frontpage tr:nth-child(odd) {background: #E3F1EC !important}*/
+table.frontpage td:hover {background-color: #00A8C6 !important; border: 2px solid #011B47;}
+/*effects for links in table on front page*/
+table.frontpage a {
+	color: #011B47; 
+	-webkit-transition: color 0.5s; 
+	-moz-transition: color 0.5s ease-in-out; 	
+	-ms-transition: color 0.50s ease-in-out;	
+	-o-transition: color 0.50s ease-in-out;
+}
+table.frontpage a:hover { 
+	color: #CC0024; 
+	-webkit-transition: color 0.5s;
+	-moz-transition: color 0.5s ease-in-out;
+	-ms-transition: color 0.50s ease-in-out;
+	-o-transition: color 0.50s ease-in-out;
+}
+/*effects for images in table on front page*/
+table.frontpage img {
+	opacity: 1;
+	filter: alpha(opacity=100);
+	-webkit-transition: opacity 0.5s;
+	-moz-transition: opacity 0.5s ease-in-out;
+	-ms-transition: opacity 0.50s ease-in-out;
+	-o-transition: opacity 0.50s ease-in-out;
+}
+table.frontpage img:hover {
+	opacity: 0.8;
+	-webkit-transition: opacity 0.5s;
+	filter: alpha(opacity=80);
+	-moz-transition: opacity 0.5s ease-in-out; 	
+	-ms-transition: opacity 0.50s ease-in-out;	
+	-o-transition: opacity 0.50s ease-in-out;
+}
+
+/*forms used to search - gene, BLAST, experiments*/
+form.search {
+	margin: 0 auto;
+/*	min-width: 50%;*/
+	width: 520px;
+	border: 2px solid #00A8C6; /*#011B47;*/
+	padding: 20px;	
+}
+/*currently selected option in dropdown menu*/
+form option {
+	background-color: aliceblue;
+	color: #011B47; 
+}
+/*dropdown menus*/
+form select {
+/*	width: 60%;*/
+	border-radius: 5px;
+	background-color: white;
+	padding: 5px;
+	color: #011B47; 
+}
+/*submit/reset buttons*/
+form input[type=submit], form input[type=reset] {
+	display:block;
+	margin: 0 auto;
+	text-align: center;
+/*	width: 40%;*/
+	border: 1px solid #00A8C6;
+	border-radius: 5px;
+	background-color: white;
+	box-shadow: 1px 1px 2px #00A8C6;
+	padding: 10px 30px;
+	font-weight: bold;
+	-webkit-transition: box-shadow 0.5s;
+	-moz-transition: box-shadow 0.5s ease-in-out;	
+	-ms-transition: box-shadow 0.50s ease-in-out;	
+	-o-transition: box-shadow 0.50s ease-in-out;
+}
+
+/*buttons on upper-right-hand corners of pages*/
+.floatbox form input[type=submit], .floatbox form input[type=reset] {
+	display:inline;
+	padding: 5px 20px;
+	margin-left: 5px;
+}
+
+form input[type=submit]:hover, form input[type=reset]:hover {
+	box-shadow: 1px 1px 10px #00A8C6; 
+	border: 1px solid #00A8C6;
+	-webkit-transition: box-shadow 0.5s;
+	-moz-transition: box-shadow 0.5s ease-in-out; 
+	-ms-transition: box-shadow 0.50s ease-in-out;	
+	-o-transition: box-shadow 0.50s ease-in-out;
+}
+/*form.search input[type=submit]:active, form.search input[type=submit]:active {box-shadow: 0px black;}*/
+
+input[type=checkbox] {
+	
+}
+
+/*general button styling*/
+button {
+	/*display:block;*/
+	/*margin: 0 auto;*/
+	text-align: center;
+/*	width: 40%;*/
+	border: 1px solid #00A8C6;
+	border-radius: 5px;
+	background-color: white;
+	box-shadow: 1px 1px 2px #00A8C6;
+	padding: 5px 10px;
+	font-weight: bold;
+	-webkit-transition: box-shadow 0.5s;
+	-moz-transition: box-shadow 0.5s ease-in-out;	
+	-ms-transition: box-shadow 0.50s ease-in-out;	
+	-o-transition: box-shadow 0.50s ease-in-out;
+}
+button:hover {
+	box-shadow: 1px 1px 10px #00A8C6; 
+	border: 1px solid #00A8C6;
+	-webkit-transition: box-shadow 0.5s;
+	-moz-transition: box-shadow 0.5s ease-in-out; 
+	-ms-transition: box-shadow 0.50s ease-in-out;	
+	-o-transition: box-shadow 0.50s ease-in-out;
+}
+
+/*to handle side-by-side buttons (e.g. BLAST page)*/
+p.buttons {
+	position: relative;
+	height: 40px;
+	max-width:440px;
+	display: -webkit-box;
+	display: -moz-box;
+	display: -ms-flexbox;
+	display: -webkit-flex;
+	display: flex;
+	margin: 0 auto;
+	left: 0%;
+	white-space: nowrap;
+}
+
+.search p.buttons input[type=submit] {position: absolute; float: left; left: 80px;}
+.search p.buttons input[type=reset] {position: absolute; float: right; right: 80px;}
+p.buttons:nth-child(1) {position: absolute; float: left; }
+p.buttons:nth-child(2) {position: absolute; float: right;}
+
+/*for the "+" in expanding/collapsing sections on orthCond*/
+span.deco {
+	font-weight: bold;
+	border: 1px solid darkgrey;
+	border-radius: 20px;
+	color: #011B47;
+	font-size: 14px;
+	padding: 2px;
+}
+
+/*for the "Nearby Genes" arrows on geneOverview*/
+svg.arrows {
+	margin: 0 auto !important;
+	max-width: 800px;
+	max-height: 100px;
+	border-left: 2px darkgray solid;
+	border-right: 2px darkgray solid;
+	/*padding-left: 5px;*/
+	/*padding-right: 5px;*/
+}
+
+g.click {
+	/*fill: #00A8C6;*/
+	/*color: #00A8C6;*/
+	cursor: pointer;
+}
+
+.helpbox {
+	margin: 0 auto;
+	border: 1px black solid;
+	border-radius: 10px;
+	padding: 10px;
+	max-width: 1200px;
+	background-color: rgba(227,241,236,0.7);
+}
+
+
+/*to handle heatmap button on cofit pages*/
+.floatbox2 {
+	float: right; 
+	right: 0px; 
+	border-width: 0px 0px;
+	border-color: #011B47;
+	border-style: solid; 
+	padding: 0 5px 10px 0;
+	width: 25%;
+	/*margin-right: 0 !important;*/
+}
+/*to be used in conjunction with floatbox2 to handle subtitle*/
+h3.short {
+	width: 72%;
+	float: left;
+	margin: 0;
+}
+
+
+
+/*mini-forms on upper-right-hand corners of pages*/
+@media screen and (min-width: 1150px) {
+	table {
+		max-width: 100%;
+	}
+	.floatbox {
+		position: absolute; 
+		float: right; 
+		top: -70px; 
+		right: 0px; 
+		border-width: 0px 0px;
+		border-color: #011B47;
+		border-style: solid; 
+		padding: 10px;
+	}
+}
+
+
+@media screen and (max-width: 1150px) {
+	table {
+		width: 100%;
+		display: inline-table;
+	}
+	.floatbox {
+/*		border: 2px 0px #011B47 solid; */
+		border-width: 0px 0px;
+		border-color: #011B47;
+		border-style: solid; 
+		padding: 10px;
+		text-align: center;
+		max-width: 400px;
+		margin: 0 auto;
+	}
+	.floatbox2 {
+		position: absolute;
+		top: -50px;
+	}
+}
+
+/*for compareGenes page graph*/
+#graphbox {
+	/*height: 100%;*/
+	min-height: 500px;
+	/*position: relative;*/
+	background-color: aliceblue;
+}
+
+#graphleft {
+	position: relative;
+	/*float: left;*/
+	/*width: 500px;*/
+	height: 100%;
+
+}
+
+#graphright {
+	position: relative;
+	height: 100%;
+
+}
+
+@media screen and (max-width: 1250px) {
+	#graphright {
+		/*width: 100%;*/
+		padding: 10px;
+		margin: 0 auto;
+	}
+}
+
+/*graphright > 615px*/
+@media screen and (min-width: 1250px) and (max-width: 1500px) {
+	#graphleft {
+		float: left;
+
+	}
+	#graphright {
+		float: right;
+		padding: 5px;
+		/*right: 0px;*/
+		/*max-width: 470px;*/
+		width: 40%;
+		background-color: aliceblue;
+		/*margin: 0 auto;*/
+		left: 0px;
+	}	
+	#graphright table {table-layout: fixed; width: 100%;}
+	#graphright table td{word wrap: break-word; /*word-break:break-all;*/}
+
+}
+
+
+@media screen and (min-width: 1500px) {
+	#graphleft {
+		float: left;
+
+	}
+	#graphright {
+		float: right;
+		background-color: aliceblue;
+		margin: 0 auto;
+		padding: 10px;
+	}
+}
+
+
+/*@media screen and (min-width: 1380px) and (max-width: 1500px) {
+	#graphleft {
+		float: left;
+
+	}
+	#graphright {
+		float: right;
+		padding: 5px;
+		max-width: 600px;
+		background-color: aliceblue;
+		margin: 0 auto;
+	}	
+
+}*/
+
+
+/*@media screen and (max-width: 1140px) {
+and (min-width: 800px) 
+	.floatbox2 {
+		position: absolute;
+		top: -40px;
+	}
+}*/
+
+
+/*@media screen and (min-width: 1350px) {
+	.floatbox2{
+		position: absolute; 
+		float: right; 
+		right: 0px; 
+		border-width: 0px 0px;
+		border-color: #011B47;
+		border-style: solid; 
+		padding: 10px;
+		top:-750px; 
+		right: 180px;
+		width:;
+	}
+}
+
+
+@media screen and (min-width: 1150px) and (max-width: 1350px) {
+	.floatbox2 {
+		position: absolute; 
+		float: right; 
+		right: 0px; 
+		border-width: 0px 0px;
+		border-color: #011B47;
+		border-style: solid; 
+		padding: 10px;
+		top: -750px !important; 
+	}
+}*/
+
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.dot {
+  stroke: none;
+}
+
+.line {
+  position: relative;
+  margin: 0 auto;
+  height: 7px;
+  z-index: 0;
+  margin-top: 0px;
+  margin-bottom: 0 auto;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.line2 {
+  position: absolute;
+  top: 0px;
+  height: 7px;
+  z-index: 2;
+}
+
+.tooltip {
+  position: absolute;
+  max-width: 200px;
+  min-height: 30px;
+  pointer-events: none;
+  z-index: 1000;
+  font-size: 12px;
+  background-color: rgba(255,209,103,0.7);
+  border-radius: 10px;
+  padding: 5px;
+}
+
+/*to make responsive scatterplots on strainTable*/
+.svg-container {
+    /*display: inline-block;*/
+    position: relative;
+    /*width: 90%;*/
+    max-width: 940px;
+    max-height: 500px;
+    vertical-align: top;
+    overflow: hidden;
+}
+.svg-content-responsive {
+    display: inline-block;
+    position: absolute;
+    top: 10px;
+    left: 0;
+}
+
+@media screen and (min-width:902px) {
+	.svg-container{
+		padding-bottom: 550px; 
+		width: 945px;
+		left: 1%;
+	}
+}
+@media screen and (min-width:890px) and (max-width:970px) {
+	.svg-container {
+		position: relative;
+		left: -5%;
+		width: 945px !important;
+		padding: 0 0 65% 0;
+		margin: 0 auto;
+	}
+}
+@media screen and (max-width:890px) {
+	.svg-container{
+		left: -7%; 
+		width: 118% !important;
+		padding: 0 0 65% 0;
+		margin: 0;
+	}
+}
+
+
+/*
+<!--[if IE]>
+
+<![endif]-->
+*/

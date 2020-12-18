@@ -1,0 +1,113 @@
+The CGI scripts rely primarily on the sqlite3 database in cgi_data/feba.db
+	Its schema is described in lib/db_setup_tables.sql
+The cgi_data/ directory must also contain:
+	a BLAST protein database in aaseqs 
+	db.StrainFitness.nickname for each organism
+All of these files are built by bin/db_setup.pl as discussed below
+
+BLAST executables (blastall, fastacmd, formatdb, and bl2seq) must be in bin/blast/
+
+Some of the scripts also write temporary files to
+	tmp/
+This directory will need to be writable by the web server, i.e.,
+	chmod a+w tmp
+
+These perl modules are required by various CGI scripts:
+	CGI
+	DBI
+        File::Which
+        FindBin
+        Getopt::Long
+	List::Util
+        HTML::Entities
+        URI::Encode
+	Time::HiRes (for making unique file names, and for timing some cgi's with debug=1)
+	Bio::SeqIO (used to read FASTA files; could be replaced)
+        Digest::MD5 (required for blatch Fitness Blast only)
+
+The front page for the web site is:
+	cgi/myFrontPage.cgi
+
+You can modify the text at the top of the home page by creating a file
+named "motd" (message of the day) in the main directory (the directory
+the contains cgi/).
+
+If you are setting up fitness blast -- see
+images/fitblast_example.html, cgi/seqservice.cgi, and
+bin/start_ublast_service.pl. You'll need to create bin/usearch6. Also,
+images/fitblast.js uses URLs of the form server_root/cgi-bin/, not
+server_root/cgi/. You may need to set up cgi-bin as a symbolic link
+for it to work, i.e. in the feba directory, ln -s cgi cgi-bin
+
+If you are setting up batch blast, then you need to create a job_data
+directory (within the main feba/ directory) and make it writable by
+your web server. You'll also need to create bin/usearch (tested with
+usearch 8, *not* usearch 6).
+
+To set up the cgi_data directory, you will need to run bin/db_setup.pl
+It relies on the HTML directories that are created by BarSeqR.pl
+It also needs these additional inputs:
+   All-vs-all best hits, see MakeBBH.pl
+   Other sequence analyses, see SetupDoms.pl and various details below
+   Tab-delimited representations of pathways in MetaCyc, as parsed by bin/ParseMetaCycPathways.pl
+   Information on SEED subsystems in subsys.txt, i.e.
+	wget ftp://ftp.theseed.org/subsystems/subsys.txt
+   img.xrefs, see bin/IMGXRefs.pl (optional)
+   For KEGG maps to work, you will need to set up kegg/maps/, see kegg/README
+
+Running the sequence analyses:
+Place hmmscan and rapsearch executables in the bin/ directory.
+	(hmmscan version 3.1.b1 and rapsearch v2.22 work)
+	(the setup commands below also use the hmmpress and prerapsearch executables, but
+	these need not be in the bin/ directory)
+Build kegg.faa:
+	download /usr2/people/gtl/data/mirrors/ftp.genome.ad.jp/pub/kegg/release/current kegg
+        and run
+	tar xzf kegg/seq_pep.tar.gz
+	cat *.pep > ~/data/FEBA/kegg.faa
+Build metacyc.faa and metacyc_ids.tab:
+	download metacyc into (say) ~/data/metacyc/22.6 and then
+	bin/ParseMetaCycSeqDat.pl -in ~/data/metacyc/22.6/data
+	bin/ParseMetaCycPathways.pl -in ~/data/metacyc/22.6/data
+Build uniprot_sprot.fasta:
+	wget ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.fasta.gz
+	gunzip uniprot_sprot.fasta.gz
+Build the three RAP databases:
+	prerapsearch -d kegg.faa -n kegg.rap # takes a while
+	prerapsearch -d metacyc.faa -n metacyc.rap
+        prerapsearch -d uniprot_sprot.fasta -n sprot.rap
+Download PFam:
+	wget ftp://ftp.ebi.ac.uk/pub/databases/Pfam/current_release/Pfam-A.hmm.gz
+	gunzip Pfam-A.hmm
+	ln -s Pfam-A.hmm pfam.hmm
+	hmmpress pfam.hmm
+Download TIGRFam:
+	wget ftp://ftp.jcvi.org/pub/data/TIGRFAMs/TIGRFAMs_15.0_HMM.tar.gz
+	wget ftp://ftp.jcvi.org/pub/data/TIGRFAMs/TIGRFAMs_15.0_HMM.tar.gz
+	wget ftp://ftp.jcvi.org/pub/data/TIGRFAMs/TIGRFAMs_15.0_HMM.LIB.gz
+	gunzip TIGRFAMs_15.0_HMM.LIB
+	ln -s  TIGRFAMs_15.0_HMM.LIB tigrfam.hmm
+	mkdir tigrinfo.files
+	cd tigrinfo.files
+	tar xzf ../TIGRFAMs_15.0_INFO.tar.gz
+	cd ..
+	cat tigrinfo.files/*.INFO > TIGR.INFO
+	(echo $'id\ttigrId\ttype\troleId\tgeneSymbol\tec\tdefinition\tignore'; ~/Genomics/pipeline/bin/parseTigrInfo.pl TIGR.INFO) > tigrinfo
+	wget ftp://ftp.jcvi.org/pub/data/TIGRFAMs/TIGR_ROLE_NAMES
+	(echo $'roleId\tlevel\tdescription'; perl -n -e 'chomp;split /\t/; ($level)=$_[2]=~/^(....)role:/; print join "\t",$_[1],$level,$_[3]; print "\n"' < TIGR_ROLE_NAMES) > tigrroles
+	/usr2/people/gtl/bin/hmmer3.1/binaries/hmmpress tigrfam.hmm
+Install the SEED API software:
+	see http://blog.theseed.org/downloads/sas.tgz
+Run the comparisons to PFam, TIGRFam, KEGG, MetaCyc, Swiss-Prot, and SEED:
+	bin/SetupDoms.pl nickname1 .. nicknameN
+	(also see RunRapSearch.pl and run_seed.pl -- it calls both of these,
+	but the HMMs are the slowest part)
+
+For showHmmAlign.hmm to run, you will need to set up an hmm/ directory
+with the HMMer databases in pfam.hmm and tigrfam.hmm. You will also
+need to run
+
+	bin/hmmfetch --index hmm/tigrfam.hmm
+	bin/hmmfetch --index hmm/pfam.hmm
+
+to index them.

@@ -1,0 +1,38 @@
+The model files tell MapTnSeq.pl what each read should look like.
+
+If using the newer TnSeq protocol, with a two-stage PCR, use
+model_pKMW3.2 for pKMW3-based Mariner libraries
+model_pKMW7.2 for pKMW7-based Tn5 libraries
+model_magic_mariner.2 for mariner libraries built with the magic pool approach
+
+If using our original TnSeq protocol with a "universal" primer based on
+the barcode priming site, use
+model_pKMW3_universal for pKMW3-based Mariner libraries
+model_pKMW7_U for pKMW7-based Tn5 libraries
+model_magic_mariner for mariner libraries built with the magic pool approach
+model_ezTn5_kanU for ezTn5 transpososome libraries such as Keio_ML9
+model_ezTn5_Tet_Bifido for libraries built with ezTn5
+  but with modified barcode flanking sequences
+
+If using our original TnSeq protocol with the original primers, use
+model_pKMW3 for pKMW3-based Mariner libraries
+  (model_pHIMAR_kan is identical to model_pKMW3)
+model_pKMW7 for pKMW7-based Tn5 libraries
+model_ezTn5_kan1 for ezTn5 transpososome libraries such as Keio_ML9
+
+The first line of the model file describes from the beginning of the
+read to the junction between the transposon and the genome. For
+model_pKMW3, this is:
+
+nnnnnnCGCCCTGCAGGGATGTCCACGAGGTCTCTNNNNNNNNNNNNNNNNNNNNCGTACGCTGCAGGTCGACGGCCGGCCAGACCGGGGACTTATCAGCCAACCTGT
+
+where the beginning nnnnnn means 6 random nucleotides and the 20 Ns
+are the random barcode.
+
+The second line of the model file is optional. It describes the
+vector's sequence after the inverted repeat (that is, after where the
+junction should be).  This allows MapTnSeq.pl to identify intact
+vector that did not integrate into the target genome. For instance, in
+pKMW3, this sequence is:
+
+TATGTGTTGGGTAACGCCAGGGTTTTCCCAGTCACGACGTTGTAAAACGACGGCCAGTGAATTAATTCTTGAAGA

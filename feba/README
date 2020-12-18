@@ -1,0 +1,199 @@
+Scripts for Estimating Mutant Fitness By Sequencing Randomly Barcoded
+Transposons (RB-TnSeq)
+
+This code repository (bitbucket.org/berkeleylab/feba/) includes
+scripts for estimating mutant fitness by sequencing randomly barcoded
+transposons (RB-TnSeq). For an overview of the technology see
+Figure 1 of Deutschbauer et al., doi: 10.1128/mBio.00306-15
+
+http://mbio.asm.org/content/6/3/e00306-15.full
+
+The stages in creating fitness estimates are:
+
+Processing TnSeq data with MapTnSeq.pl and DesignRandomPool.pl
+
+Processing BarSeq data with MultiCodes.pl, combineBarSeq.pl, and
+BarSeqR.pl or BarSeqtest.pl.
+
+(Unless otherwise specified, all executables are from the bin/ subdirectory.)
+
+For web server code to browse the results, see the cgi/ subdirectory,
+especially cgi/README and cgi/SETUP.
+
+This is research software that has undergone limited testing. Be careful.
+
+Morgan Price, Lawrence Berkeley Lab, October 2014
+
+DETAILS ON USING THE SCRIPTS
+
+MapTnSeq.pl identifies the random barcode, the junction between the
+transposon and the genome, and maps the remainder of the read to the
+genome. The result is a list of mapped reads with their barcodes and
+insertion locations.
+
+DesignRandomPool.pl uses the output of MapTnSeq.pl to identify
+barcodes that consistently map to a unique location in the
+genome. These are the useful barcodes. It also reports various metrics
+about the pool of mutants. (This step is done by invoking
+PoolStats.R.)  Ideally, a mutant library has even insertions across
+the genome; has insertions in most of the protein-coding genes (except
+the essential ones); has a similar number of reads for insertions in
+most genes (i.e., no crazy positive selection for loss of a few
+genes); has insertions on both strands of genes (insertions on only
+one strand may indicate that the resistance marker's promoter is too
+weak); has tens of thousands or hundreds of thousands of useful
+barcodes; and the useful barcode s account for most of the reads.
+
+MultiCodes.pl identifies the barcode in each read and makes a table of
+how often it saw each barcode. It can also demultiplex reads if using
+the older primers with inline demultiplexing and no separate index
+read.
+
+combineBarSeq.pl merges the table of counts from MultiCodes.pl with
+the pool definition from DesignRandomPool.pl to make a table of how
+often each strain was seen.
+
+BarSeqR.pl combines multiple lanes of barseq output with the genes
+table to make a single large table, and then uses the R code in FEBA.R
+to estimate the fitness of each gene in each experiment. It produces a
+mini web site with data tables and quality assessment plots. It
+requires metadata about the experiments (usually FEBA_BarSeq.tsv) and
+information about the GC content of each gene (genes.GC -- this can be
+produced from a normal genes table with RegionGC.pl).
+
+In FEBA_BarSeq.tsv, the Date_pool_expt_started field specifies what
+date the experiment was started on, and experiment(s) with
+Description=Time0 are the control sample(s) for that set of
+experiments. If you need to set up your controls in a different way,
+use a different Date_pool_expt_started (any character string is
+allowed) or use BarSeqTest.pl. SetName and Index indicate which reads
+correspond to that sample.
+
+If you want to use the cgi scripts to view the results, then the
+metadata table must include all of these fields: SetName
+Date_pool_expt_started Person "Mutant Library" Description Index Media
+"Growth Method" Group Condition_1 Units_1 Concentration_1 Condition_2
+Units_2 Concentration_2.
+
+The results of BarSeqR.pl may change as data is added, as this alters
+which strains are considered abundant enough to include in the
+analysis. You can get around this by using the SaveStrainUsage.pl
+script after you process your data. This will record which strains
+were used for an analysis, and if these files are saved to the
+organism directory, then BarSeqR.pl will use this information.  (You
+can turn this behavior of BarSeqR.pl off by setting the
+FEBA_NO_STRAIN_USAGE environment variable.)
+
+BarSeqTest.pl is a wrapper to analyze barseq reads and run
+BarSeqR.pl. It is intended for small test runs and does not require a
+metadata table.
+
+There are also helper scripts RunTnSeqLocal.pl and RunBarSeqLocal.pl
+for analyzing the reads in parallel. Both of these scripts use
+submitter.pl to issue jobs in parallel, and its behavior can be
+modified by setting environment variables (see top of submitter.pl).
+
+RunTnSeqLocal.pl processes a TnSeq run in parallel by running
+MapTnSeq.pl on each part separately and then running
+DesignRandomPool.pl. This script assumes that there is a g/nickname
+directory for your organism that includes the genome sequence
+(genome.fna) and a tab-delimited table of genes (genes.tab).
+
+RunBarSeqLocal.pl processes a large BarSeq run in parallel by running
+MultiCodes.pl on each piece separately and then running
+combineBarSeq.pl to combine the results.
+
+SETTING UP A GENOME
+
+The files that these scripts depend on (genome.fna, genes.tab,
+genes.GC, aaseq) can be set up from a genbank file or a JGI assembly
+with a gff file by the script SetupOrg.pl. Unlike most of the other
+code, Setuporg.pl depends on BioPerl; also to handle genbank files
+you will need to place the genbank2gff.pl script from
+https://github.com/ihh/gfftools/
+in the bin/ subdirectory.
+
+OTHER DEPENDENCIES
+
+The read mapping (MapTnSeq.pl) depends on UCSC's blat, which is freely available for non-commercial use at
+
+http://hgdownload.soe.ucsc.edu/downloads.html#source_downloads
+
+It should be straigthforward to modify MapTnSeq.pl to use bowtie 2 or
+megablast or ublast instead, but some minor changes to the parsing
+code would be required.
+
+EXAMPLES
+
+You can see examples of using this code and of the resulting mini web
+sites at
+
+http://genomics.lbl.gov/supplemental/rbarseq/
+
+CONTROLLING HOW MANY CPUS ARE USED
+
+You can use the MC_CORES environment variable to control how many CPUs
+the scripts try to use. (If MC_CORES is not set, then for the R code,
+the default is 2 threads; for RunTnSeqLocal.pl or RunBarSeqLocal.pl,
+the default is based on the number of CPUs according to /proc/cpuinfo:
+see submitter.pl.)
+
+RUNNING ON MacOS
+
+I have only tested the scripts on Linux, but I have heard that they
+will work if you make these two changes:
+
+1. Various scripts depend on /usr/bin/Rscript. If it does not exist,
+then you need to set up the symbolic link or modify the
+scripts. (BarSeqR.pl or BarSeqTest.pl invoke an R script bin/RunFEBA.R
+which invokes lib/FEBA.R. DesignRandomPool.pl invokes an R script
+lib/PoolStats.R. bin/db_setup.pl invokes lib/TopCofit.R)
+
+2. Set MC_CORES to the number of CPUs you want the scripts to use. (By
+default, RunTnSeqLocal.pl or RunBarSeqLocal.pl run jobs in parallel
+using feba/bin/submitter.pl, which uses /proc/cpuinfo to estimate how
+many CPUs to use, but /proc/cpuinfo does not exist on MacOS.)
+
+RUNNING ON WINDOWS
+
+I have not tested the scripts on Windows, but I have heard that they
+will work. If you use BarSeqR.pl or BarSeqTest.pl to compute fitness
+values, then you will need to install cygwin and you will need to make
+sure that the cygwin directory is at the beginning of the PATH (ahead
+of the windows directory). This is so that the Unix-like version of
+find will be run. For example, a command like this
+
+find -H fastq_directory -name '*.fastq.gz'
+
+will work if cygwin and PATH are set up but will not work on standard
+windows.
+
+--- LEGALESE ---
+
+Copyright (C) 2014 The Regents of the University of California All
+rights reserved.
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along
+with this program; if not, write to the Free Software Foundation, Inc.,
+51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+or visit http://www.gnu.org/copyleft/gpl.html
+
+Disclaimer
+
+NEITHER THE UNITED STATES NOR THE UNITED STATES DEPARTMENT OF ENERGY,
+NOR ANY OF THEIR EMPLOYEES, MAKES ANY WARRANTY, EXPRESS OR IMPLIED,
+OR ASSUMES ANY LEGAL LIABILITY OR RESPONSIBILITY FOR THE ACCURACY,
+COMPLETENESS, OR USEFULNESS OF ANY INFORMATION, APPARATUS, PRODUCT,
+OR PROCESS DISCLOSED, OR REPRESENTS THAT ITS USE WOULD NOT INFRINGE
+PRIVATELY OWNED RIGHTS.
+

@@ -1,0 +1,293 @@
+<HTML>
+<HEAD>
+<TITLE>ORG</TITLE>
+</HEAD>
+<BODY>
+<H2>Fitness Data for ORG</H3>
+
+<P><small>NEXPS condition samples (NSUCCESS successful), DATE, statistics version VERSION</small>
+
+<P><B>Plots</B>
+<UL>
+<LI>Quality of experiments
+<UL>
+<LI><A HREF="fit_quality.pdf">Experiment quality</A>
+<UL>
+<LI>Grey: Time0, i.e. negative control; red: failed; green: OK; blue: OK, but maxFit > 5
+<LI>After the main page there are separate pages for subsets of experiments by date and lane.
+</UL>
+<LI><A HREF="fit_quality_cor12.pdf">Rho12 for each experiment</A> (genes with |t| &gt; 3 are in red)
+</UL>
+<LI>Clustering of experiments (rotate clockwise to view)
+<UL>
+<LI><A HREF="fit_cluster_logratios.pdf">Clustering of log-ratios</A>
+<LI><A HREF="fit_cluster_logcounts.pdf">Clustering of log-counts</A>
+</UL>
+<LI><A HREF="cofitness.pdf">Distribution of cofitness</A>
+<LI><A HREF="fit_chr_bias.pdf">Chromosomal bias for each experiment</A>
+</UL>
+
+<P><B>Tables</B>
+
+<UL>
+
+<LI>Experiments
+<UL>
+<LI><A HREF="fit_quality.tab">Experiments and quality scores</A>
+<LI><A HREF="expsUsed">Detailed metadata for experiments</A>
+</UL>
+
+<LI>Genes
+<UL>
+<LI><A HREF="fit_genes.tab">Gene annotations</A>
+<LI><A HREF="fit_logratios_good.tab">Gene fitness</A> (normalized log2 ratios for successful experiments )
+
+<UL>
+<LI>or for <A HREF="fit_logratios.tab">all</A> experiments</LI>
+<LI>(To see why experiments were not successful or were "ignored" and not analyzed, check the <A HREF="log">log</A>.)
+<LI><A HREF="fit_logratios_unnormalized.tab">Unnormalized logratios</A>
+<LI><A HREF="fit_logratios_unnormalized_naive.tab">Naive unnormalized logratios</A>
+<LI>Fitness for each half of gene: <A HREF="fit_logratios_half1.tab">1st half</A> and <A HREF="fit_logratios_half2.tab">2nd half</A>
+<LI><A HREF="strong.tab">Strong fitness values</A> (|fit| > 2 and |t| > 5)
+<LI><A HREF="polar_effects.tab">Potential polar effects</A> (|fit| > 1, |fit(+) - fit(-)| &gt; 1, and an unpaired <i>t</i> test between strain fitness on the two strands gives P &lt; 0.01)
+</UL>
+
+<LI><A HREF="fit_t.tab">t-like test statistic</A> for significant gene fitness (based on consistency of measurements for the gene)
+<UL>
+<LI>Or <A HREF="fit_standard_error_obs.tab">estimated standard error</A> (based on variation across strains)
+<LI>Or <A HREF="fit_standard_error_naive.tab">naive standard error</A> (based on total counts)
+</LI>
+</UL>
+<LI><A HREF="cofit">Top cofitness hits</A>
+<LI><A HREF="specific_phenotypes">Specific phenotypes</A>
+<LI><A HREF="high_fitness.tab">Genes with high fitness</A> (includes high-confidence cases from experiments that did not meet quality metrics)
+<UL><LI>short, used, maxFit, and gMean refer to the experiment, not the gene
+</UL>
+<LI><A HREF="gene_counts.tab">Counts per gene per sample</A> (#reads, summed over strains)
+</UL>
+
+<LI>Strains
+<UL>
+<LI><A HREF="all.poolcount">BarSeq count for each strain by each sample</A> (large)
+<LI><A HREF="strain_fit.tab">Strain fitness</A> (log2 ratios, normalized, large)
+</UL>
+
+</UL>
+
+
+<P><B>R</B>
+<UL>
+<LI><A HREF="fit.image">R image</A> (large)
+<LI><A HREF="log">Log file from processing in R</A>
+<UL>
+<LI>At the top, "Ignoring" lists which samples were not analyzed at all. Either Drop=TRUE in the metadata or there were too few reads for the sample. These samples are not included in any of the tables.
+<LI>At the bottom, the log lists which experiments were considered not successful and why:
+<UL>
+<LI>"low_count" -- there were not enough reads for the median gene (gMed &lt; 50). There were too few cells or something went wrong during DNA extraction or PCR. Or, there might be strong positive selection, i.e. gMean &gt; 50, gMean &gt;&gt; gMed and maxFit &gt;&gt; 1. If there was strong positive selection then there might be useful biological information in the genes with the strong positive fitness values. Check the <A HREF="fit_quality.tab">quality metrics</A> table and then the table of gene fitness for all experiments (not just successful ones).
+<LI>"high_mad12" -- the fitness estimates from the two halves of a gene were not very consistent (mad12 &gt; 0.5). This could result from variable lag or if only a small subset of cells were able to grow.
+<LI>"low_cor12" -- the rank correlation of the fitness values for the two halves of a gene was too low (cor12 &lt; 0.1). In other words, there wasn't much biological signal. This could be a sign that the cells did not grow enough or that the condition is too similar to the condition that the pool was made under (so that all sick strains are gone). If you have replicates then you might still be able to get high quality results by averaging them.
+<LI>"high_adj_gc_cor" -- Suspicious correlations indicate a problem with GC bias or with normalization (|gccor| &gt; 0.2 or |adjcor| &gt; 0.25).
+</UL>
+</UL>
+<LI>Source code: see bin/RunFEBA.R and lib/FEBA.R in the dev branch of the <A HREF="https://bitbucket.org/berkeleylab/feba">FEBA BitBucket repository</A>
+<LI>Input files for RunFEBA.R: <A HREF="genes">genes</A>, <A HREF="exps">exps</A>, <A HREF="all.poolcount">all.poolcount</A> (large!)
+<LI>Also see the <A HREF="pool">pool</A>
+</UL>
+
+
+<H2>Documentation</H2>
+
+<H3>Gene Fitness</H3>
+
+<P>Gene fitness is a log<SUB>2</SUB> ratio. It is normalized so that
+genes with no phenotype should have values near zero. Ideally, genes
+that are very sick (incapable of growth in the condition) should have
+values around -6 if the experiment ran for 6 generations. In practice,
+values below -2 or -3 indicate that mutants in the gene are very sick,
+and values around -1 indicate a mildly deleterious phenotype for
+mutants in that gene. On the other hand, if a gene's activity is
+deleterious, then the fitness values will be positive.
+
+<P>Gene fitness is calculated from strain fitness:
+<UL>
+<LI>Strain fitness = log<SUB>2</SUB> ( C<SUB>1</SUB> + #Reads in Sample ) - log<SUB>2</SUB>( C<SUB>0</SUB> + #Reads in Time0 ), where C<SUB>1</SUB> and C<SUB>0</SUB> are small constants to avoid taking the logarithm of 0.<BR>
+<LI>Unnormalized gene fitness = C + weighted average of strain fitness, where C is chosen so that the median gene's unnormalized fitness is zero.
+</UL>
+
+The method for averaging gene fitness across strains may change in the future.
+
+<H3>Normalization for Chromosomal Bias</H3>
+
+<P>Depending on the growth phase of the sample, the copy number of the
+chromosome may be higher near the origin than near the terminus.
+If the treated and Time0 samples were growing at different rates,
+then the there will be variable recovery of barcodes near the origin which does
+not relate to the fitness of the genes. This is plotted for each
+experiment in the chromosome bias plots (note that the y axis is the
+unnormalized fitness). To remove this effect, we subtract the running median
+of fitness (the line in those plots).  Then, a constant is added so
+that the mode (the peak of the distribution of gene fitness values) is
+zero.
+
+<P>Also, in different preparations of genomic DNA, the efficiency of
+recovering plasmids can vary. So, for each plasmid (if this organism
+has any), the median fitness of the genes on the plasmid is set to
+zero. Plasmids with very few genes cannot be normalized and so their genes are excluded.
+
+<P>If the genome sequence is not complete and is in many fragments, then it is not easy to tell if there is an effect of proximity to the terminus. Assuming that each scaffold is small, there will not be a significant variation in copy number across the scaffold. Since each scaffold is normalized separately, this should correct for the varying copy numbers of the scaffolds (but this has not been verified). Also, since it is difficult to a distinguish a small scaffold from a plasmid, genes from small scaffolds are excluded.
+
+<H3><A NAME="qual">The quality scores in the table of experiments</A></H3>
+
+<UL>
+<LI><B>name</B> -- set1H1 means index H1 in set1 for that organism. These experiment names are the column names in most of the other tables.
+
+<LI><B>short</B> -- shortened description. Samples with the same value are replicates.
+
+<LI><B>t0set</B> -- which set of Time0 samples this was compared to. If this is a Time0 sample, then the self-counts were subtracted out of the other side of the comparison as a negative control.
+
+<LI><B>num</B> -- another unique identifier, the row number in the input exps file. Used in the plots for compactness and shown in the cluster diagrams with "#", i.e. "set1H1 #3".
+
+<LI><B>nMapped</B> -- #reads for that sample that corresponded to a known strain
+
+<LI><B>nPastEnd</B> -- #reads that corresponded to a strain that has an insertion within the suicide vector instead of within the genome.
+
+<LI><B>nGenic</B> -- #reads that correspond to insertions within genes
+
+<LI><B>nUsed</B> -- #reads that lie within the central 10-90% of a gene. Only
+these reads are used to estimate gene fitness.
+
+<LI><B>gMed</B> -- median reads per gene in the sample. Values under 50
+suggest that the experiment failed to generate useful information
+about most genes.
+
+<LI><B>gMedt0</B> -- median reads per gene in the corresponding t0
+sample(s). Values under 50 suggest that the experiment might have
+failed.
+
+<LI><B>gMean</B> -- average number of reads per gene in the sample. This can
+be far higher than gMed because of a strong skew in the sampling of
+gene mutants. This usually indicates strong positive selection for
+mutants in a few genes.
+
+<LI><B>cor12</B> -- (called rho12 in the plots) -- A measure of how consistent the fitness data is for each
+gene.  For each gene, we estimate the (normalized) fitness using only insertions
+within the first half of each gene (10-50%) or only within the second
+half of each gene (50-90%). cor12 is the Spearman rank correlation of
+those two sets of values. Values below 0.2 suggest that the experiment
+might have failed.
+
+<LI><B>mad12</B> -- Another measure of the consistency. For each experiment,
+the median absolute difference (m.a.d.) between the fitness according
+to the first half of the gene and the fitness according to the secnd
+half of the gene. Values above 0.5 suggest that the experiment might have failed.
+
+<LI><B>mad12c</B>, <B>mad12c_t0</B> -- The m.a.d. of the log2 counts
+for the 1st and 2nd half of the gene, in the treated sample or the
+Time0 sample.
+
+<LI><B>opcor</B> -- A measure of how consistent the fitness data is
+for each operon. For each pair of adjacent genes that are predicted to
+be in the same operon, we take the fitness values for the upstream and
+downstream gene. This is the Spearman rank correlation of those two
+sets of values. Genes in the same operon often have related functions,
+so opcor < 0.2 suggest that the experiment might have failed.
+
+<LI><B>adjcor</B> -- A measure of how consistent the fitness data is
+for nearby genes that probably do *not* have related functions. This
+is like opcor but is computed using adjacent genes that are not on the
+same strand. Values above 0.1 may be an indication of problems with
+the BarSeq PCR (i.e. GC bias) or with the normalization.
+
+<LI><B>gccor</B> -- A test of GC bias, this reports the Pearson correlation between a gene's GC content and its fitness. Values above 0.1 or below -0.1 may be an indication of problems with the BarSeq PCR.
+
+<LI><B>maxFit</B> -- The highest fitness value of any gene. Values above 5
+indicate strong positive selection in the sample. This often explains why
+an experiment failed, either because most genes have few reads (low
+gMed) or because only a few strains grow.
+
+<LI><B>u</B> -- Whether the experiment was successful and is used in global analyses.
+</UL>
+
+As of April 9, 2014, the requirements for a successful experiment are:
+<UL>
+<LI>not a Time0 (Time0 "fitness" values are computed as a negative control)
+<LI>gMed &ge;50
+<LI>mad12 &le; 0.5
+<LI>cor12 &ge; 0.1
+<LI> |gccor| &le; 0.2 and |adjcor| &le; 0.25
+</UL>
+
+(The rules are implemented in FEBA_Exp_Status() in FEBA.R)
+
+<H3>The R image</H3>
+
+The R image includes:
+
+<UL>
+<LI><B>genes</B> -- a table of genes, including
+<UL>
+<LI><B>locusId</B>, an arbitrary identifier used in data tables
+<LI><B>sysName</B>, the systematic name or locus tag
+<LI><B>type</B>, the type of gene, including 1 for protein-coding genes, 2:4 for various kinds of ribosomal RNAs, 5 for tRNAs, and 7 for pseudogenes of protein-coding genes.
+<LI><B>scaffold</B>, <B>begin</B>, <B>end</B>, <B>strand</B> -- the gene's location. begin < end regardless of strand.
+<LI><B>GC</B> -- the GC content of the gene's sequence
+<LI><B>nTA</B> -- the number of TA dinucleotides in the gene's sequence (the Mariner transposase usually inserts at TA).
+</UL>
+<LI><B>fit</B> includes many different tables:
+<UL>
+<LI><B>q</B> -- quality scores for each experiment and some metadata and quality metrics (described <A HREF="#qual">above</A>)
+<LI>per-gene information:
+<UL>
+<LI><B>g</B> -- the corresponding locusId for each row in the per-gene tables. Genes that are not in this list might lack mapped insertions (e.g. because they are short, duplicated, or essential). Or, they might have insertions but not enough reads at Time0 to compute a fitness value (perhaps because the mutants are very sick).
+<LI><B>lrn</B> -- normalized gene fitness (in the same order as in g)
+<LI><B>lr</B> -- unnormalized gene fitness
+<LI><B>lrn1</B>, <B>lrn2</B> -- normalized gene fitness using only strains within the 1st or 2nd half of each gene. These were used to compute the cor12 (or rho12) quality metric. These should also be useful for checking whether a specific gene's fitness measurement is reliable. Also see <B>lr1</B> and <B>lr2</B> for the corresponding unnormalized values.
+<LI><B>t</B> -- a t-like test statistic that gives an estimate of how significant this gene's measurement is
+<LI><B>se</B> -- an estimate of how noisy this gene's measurement is (se is short for standard error)
+<LI><B>sdNaive</B> -- the best-case of how noisy this gene's measurement would be, based on the total counts
+<LI><B>n</B> -- number of usable strains for each gene
+<LI><B>nEff</B> -- effective number of strains that were used to compute each gene's fitness value. The effective number is less than the actual number because of uneven weighting of the strains. nEff = max(weight) / sum(weight).
+<LI><B>tot</B>, <B>tot0</B> -- total counts for the central part of this gene in the treatment and Time0 samples.
+<LI><B>tot1</B>, <B>tot2</B>, <B>tot1_0</B>, <B>tot2_0</B> -- similarly for only the 1st and 2nd half of each gene.
+</UL>
+<LI>per-strain information:
+<UL>
+<LI><B>strains</B> -- a table of all mapped strains. This describes the barcode (as seen in TnSeq) and its reverse complement (as seen in BarSeq), where the insertion is, and what orientation it is in. If the insertion mapped to the delivery vector then scaffold = "pastEnd". If the strain is within the central 10-90% of a gene, then the locusId is indicated. If the strain was within 10-90% of a gene and had enough reads to be included in the gene fitness calcuation, then used=TRUE. "f" is the fractional position in the gene (in the gene's orientation), i.e. 0.5 for an insertion in the middle of the gene and near 0 for an insertion at the very 5' end.
+<LI><B>strain_lrn</B> -- fitness values for each strain (in the same order as in strains). These will often be noisy due to low counts. Also see non-normalized fitness values in strain_lr.
+<LI><B>strain_se</B> -- a rough estimate of how noisy the per-strain fitness values are
+</UL>
+<LI>simple gene-wise analyses:
+<UL>
+<LI><B>cofit</B> -- top cofitness hits for each gene
+<LI><B>specphe</B> -- specific phenotypes. A genes' phenotype is considered specific for a condition if abs(fit) > 1 and abs(fit) > percentileFit + 0.5 and abs(t) > 5, where percentileFit is the 95th percentile of abs(fit) for that gene. A gene may have more than one specific phenotypes.
+<LI><B>high</B> -- cases of significantly high fitness, including in experiments that did not meet quality metrics. This is especially useful for experiments where mutants in a few genes took over the population.
+<UL><LI>As of September 12, 2018, the criteria are fit &ge; 4; t &ge; 5; standard error = fit/t &le; 2;
+  gMean &ge; 10 (for the experiment); and fit &ge; maxFit - 8, where maxFit is for this experiment
+</UL>
+</UL></UL>
+<LI><B>expsUsed</B> -- a table of experiments
+</UL>
+
+<H3>The pool of mutants</H3>
+
+The <A HREF="pool">pool</A> file is used to assign barcodes ot strains while assembling <A HREF="all.poolcount">all.poolcount</A>. It includes a separate row for each strain:
+
+<UL>
+<LI><B>barcode</B> -- The barcode identified by TnSeq
+<LI><B>rcbarcode</B> -- The reverse complement of barcode, which is what is seen during BarSeq
+<LI><B>nTot</B> -- The total number of TnSeq reads that mapped to either the genome or the delivery vector and contained this barcode.
+<LI><B>n</B> -- #mapped TnSeq reads for this barcode at its primary location. n will often be a bit less than nTot because of chimeric reads that arise during the PCR step of the TnSeq protocol.
+<LI><B>scaffold, strand, pos</B> -- The primary location that this barcode maps to. If it maps to the delivery vector, then scaffold="pastEnd" and strand and pos are blank. Otherwise, pos is 1-based.
+<LI><B>n2</B> -- #mapped TnSeq reads for this barcode at its second-most-popular location. n2 << n because other barcodes are filtered out when "designing" the pool.
+<LI><B>scaffold2, strand2, pos2</B> -- the secondary location
+<LI><B>pastEnd</B> -- #TnSeq reads for this barcode that map to the delivery vector.
+</UL>
+
+(Mutant libraries made with transpososomes instead of a suicide plasmid do not have a delivery vector and will not have any "pastEnd" reads.)
+
+<p>Written by <A HREF="mailto:funwithwords26@gmail.com">Morgan Price</A>, Arkin group, Lawrence Berkeley Lab, January 2014
+
+</BODY>
+</HTML>
+
+

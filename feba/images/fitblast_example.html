@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en-US" xml:lang="en-US">
+<head>
+  <!-- The meta tag may be necessary for it to work in some versions of Internet Explorer.
+       The other metdata attributes are not nceessary.-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <link rev="made" href="mailto:morgannprice%40yahoo.com" />
+    <title>Fitness BLAST Example</title>
+    <meta name="copyright" content="copyright 2015 UC Berkeley" />
+    <link rel="shortcut icon" href="../images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="../images/favicon.ico" type="image/x-icon">
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+
+    <!-- The table made by fitblast_load_table() will be of class fitblast, so
+	 this lets you modify its style -->
+    <style>
+      table.fitblast { border-collapse: collapse; }
+      table.fitblast tr {border: 1px solid grey; }
+      table.fitblast tr:hover td { background-color: rgb(200,200,200); }
+      table.fitblast tr:hover td { background-color: rgb(200,200,200); }
+      table.fitblast td { padding: 3px; }
+
+    </style>
+    <!-- These javascript libraries are required -->
+    <script src="../d3js/d3.min.js"></script>
+    <script src="../images/fitblast.js"></script>
+</head>
+<body>
+
+<H2>Fitness BLAST Example</H2>
+
+For a specified protein sequence, Fitness BLAST shows homologs that have <A HREF="../cgi-bin/help.cgi">fitness data</A>, as identified by <A HREF="http://www.drive5.com/usearch/">usearch</A>.
+
+<H3>Short Results</H2>
+
+<p>The short result shows up to two hits. It always includes the top hit with fitness data (if there is one). It may show another hit if the top hit does not have a significant phenotype or strong cofitness but another hit does.</p>
+
+<TABLE class="fitblast">
+<TR><TH>E. coli gene</TH><TH>Short fitness BLAST result</TH></TR>
+<!-- Note use of id -- the id tells fitblast_load_short() where to write  -->
+<TR><TD valign="top">uvrC</TD><TD valign="top" id="fitblast_short_uvrC"> </TD>
+<TR><TD valign="top">yqiB</TD><TD valign="top" id="fitblast_short_yqiB"> </TD>
+<TR><TD valign="top">csrA</TD><TD valign="top" id="fitblast_short_csrA"> </TD>
+</TABLE>
+
+<H3>Detailed Results</H2>
+
+<p>The table result shows all of the homologs of the gene in the organisms that we have fitness data for (up to a limit of 50). Here is the table for <i>uvrC</i> from <i>E. coli</i>.
+
+<!-- Note use of id -- the id tells fitblast_load_table() where to write  -->
+<DIV id="fitblast_table_uvrC"></DIV>
+
+<script>
+/* The root of the server being used for Fitness BLAST. Should end with '/' */
+var server_root = "http://fit.genomics.lbl.gov/";
+
+/* this would be replaced by the protein sequence of interest */
+var uvrC ="MSDQFDAKAFLKTVTSQPGVYRMYDAGGTVIYVGKAKDLKKRLSSYFRSNLASRKTEALVAQIQQIDVTVTHTETEALLLEHNYIKLYQPRYNVLLRDDKSYPFIFLSGDTHPRLAMHRGAKHAKGEYFGPFPNGYAVRETLALLQKIFPIRQCENSVYRNRSRPCLQYQIGRCLGPCVEGLVSEEEYAQQVEYVRLFLSGKDDQVLTQLISRMETASQNLEFEEAARIRDQIQAVRRVTEKQFVSNTGDDLDVIGVAFDAGMACVHVLFIRQGKVLGSRSYFPKVPGGTELSEVVETFVGQFYLQGSQMRTLPGEILLDFNLSDKTLLADSLSELAGRKINVQTKPRGDRARYLKLARTNAATALTSKLSQQSTVHQRLTALASVLKLPEVKRMECFDISHTMGEQTVASCVVFDANGPLRAEYRRYNITGITPGDDYAAMNQVLRRRYGKAIDDSKIPDVILIDGGKGQLAQAKNVFAELDVSWDKNHPLLLGVAKGADRKAGLETLFFEPEGEGFSLPPDSPALHVIQHIRDESHDHAIGGHRKKRAKVKNTSSLETIEGVGPKRRQMLLKYMGGLQGLRNASVEEIAKVPGISQGLAEKIFWSLKH";
+
+var yqiB = "MKRYTPDFPEMMRLCEMNFSQLRRLLPRNDAPGETVSYQVANAQYRLTIVESTRYTTLVT IEQTAPAISYWSLPSMTVRLYHDAMVAEVCSSQQIFRFKARYDYPNKKLHQRDEKHQINQ FLADWLRYCLAHGAMAIPVY";
+
+var csrA = "MLILTRRVGETLMIGDEVTVTVLGVKGNQVRIGVNAPKEVSVHREEIYQRIQAEKSQQSSY";
+
+fitblast_load_short("fitblast_short_uvrC", server_root, uvrC);
+fitblast_load_short("fitblast_short_yqiB", server_root, yqiB);
+fitblast_load_short("fitblast_short_csrA", server_root, csrA);
+
+fitblast_load_table("fitblast_table_uvrC", server_root, uvrC);
+</script>
+
+<p>The fitness field gives the range of fitness values that were observed, so that you can see if the gene has any strong phenotypes. Statistically significant values are in bold. The cofit field shows the highest cofitness value, so that you can see if the gene's fitness pattern is similar to that of another gene.
+
+<H3><A NAME="code">Incorporating Fitness BLAST into a web page</A></H3>
+
+<p>You can see an example of Fitness BLAST incorporated into another web site at the <A HREF="http://www.microbesonline.org/cgi-bin/fetchLocus.cgi?locus=155443">MicrobesOnline gene info page</A>. To incorporate Fitness BLAST into your own HTML page, all you need is a protein sequence and a few lines of javascript. The ingredients are:
+
+<UL>
+<LI>Two script tags that load the javascript libraries from fit.genomics.lbl.gov/d3js/d3.min.js and fit.genomics.lbl.gov/images/fitblast.js
+<LI>A div tag named "fitblast" (or whatever name you choose)
+<LI>A script tag that uses the fitblast_load_short() javascript function to load the short-form results into the specified div tag given the specified Fitness BLAST server and a protein sequence. (Or use fitblast_load_table() with the same arguments to load the table instead.)
+</UL>
+
+<p>and here is a concrete example:
+
+<pre>
+&lt;script src="http://fit.genomics.lbl.gov/d3js/d3.min.js"&gt;&lt;/script&gt;
+&lt;script src="http://fit.genomics.lbl.gov/images/fitblast.js"&gt;&lt;/script&gt;
+&lt;div id="fitblast"&gt;&lt;/div&gt;
+&lt;script&gt;
+  fitblast_load_short("fitblast", "http://fit.genomics.lbl.gov/",
+      "MKILVIGPSWVGDMMMSQSLYRTLKARYPQAIIDVMAPAWCRPLLSRMPEVNEAIPMPL");
+&lt;/script&gt;
+</pre>
+
+<p>You can also look at the HTML source for this page. If you use fitness_load_table(), note that the table it creates will be of class fitblast, so you set table.fitblast styles in cascading style sheets to modify how it is formatted.
+
+<P>Alternatively, to have Fitness BLAST return formatted HTML, use URLs like this:
+
+<pre><font color="blue">http://fit.genomics.lbl.gov/cgi-bin/seqservice.cgi?html=1&amp;seq=MSSLQRIVLIDTHLPGVVELALDGHTNICGTNASGKTTLQRLVPVFYGEYPSRVVPSTRDSFERWYLPHDSSYIIYEYRRGDGMLYQAVLSSNGDGKGISYRFIAKGFELDDYVKARNGDS</font></pre>
+
+<H3><A NAME="genomes">Fitness BLAST for Genomes</A></H3>
+
+As an alternative, you can pre-compute best hits for all genes in a genome at once (<A HREF="http://fit.genomics.lbl.gov/cgi-bin/batch_blast.cgi">link</A>).
+
+<p><small>Developed by <A HREF="http://morgannprice.org/">Morgan Price</A>. Please report any errors to <A HREF="mailto:funwithwords26@gmail.com">Morgan</A>.</small></p>
+</body>
+</html>

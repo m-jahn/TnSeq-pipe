@@ -1,0 +1,747 @@
+Media	Wolfe's mineral mix	
+Description	Standard 100X mineral solution (based on Wolfe's formulation)	
+X	100	
+Controlled vocabulary	Concentration	Units
+Magnesium Sulfate Heptahydrate	3	g/L
+Nitrilotriacetic acid	1.5	g/L
+Sodium Chloride	1	g/L
+Manganese (II) sulfate monohydrate	0.5	g/L
+Cobalt chloride hexahydrate	0.1	g/L
+Zinc sulfate heptahydrate	0.1	g/L
+Calcium Chloride Dihydrate	0.1	g/L
+Iron (II) sulfate heptahydrate	0.1	g/L
+Nickel (II) chloride hexahydrate	0.025	g/L
+Aluminum potassium sulfate dodecahydrate	0.02	g/L
+Copper (II) sulfate pentahydrate	0.01	g/L
+Boric Acid	0.01	g/L
+Sodium Molybdate Dihydrate	0.01	g/L
+Sodium selenite pentahydrate	0.3	mg/L
+		
+Media	Wolfe's mineral mix_minus_Nitrilotriacetic_acid	
+Description	Standard 100X mineral solution (based on Wolfe's formulation) without Nitrilotriacetic acid	
+X	100	
+Controlled vocabulary	Concentration	Units
+Magnesium Sulfate Heptahydrate	3	g/L
+Sodium Chloride	1	g/L
+Manganese (II) sulfate monohydrate	0.5	g/L
+Cobalt chloride hexahydrate	0.1	g/L
+Zinc sulfate heptahydrate	0.1	g/L
+Calcium Chloride Dihydrate	0.1	g/L
+Iron (II) sulfate heptahydrate	0.1	g/L
+Nickel (II) chloride hexahydrate	0.025	g/L
+Aluminum potassium sulfate dodecahydrate	0.02	g/L
+Copper (II) sulfate pentahydrate	0.01	g/L
+Boric Acid	0.01	g/L
+Sodium Molybdate Dihydrate	0.01	g/L
+Sodium selenite pentahydrate	0.3	mg/L
+		
+Media	Wolfe's vitamin mix	
+Description	Standard 100X vitamin solution (based on Wolfe's formulation)	
+X	100	
+Controlled vocabulary	Concentration	Units
+pyridoxine HCl	10	mg/L
+4-Aminobenzoic acid	5	mg/L
+Lipoic acid	5	mg/L
+Nicotinic Acid	5	mg/L
+Riboflavin	5	mg/L
+thiamine HCl	5	mg/L
+calcium pantothenate	5	mg/L
+biotin	2	mg/L
+Folic Acid	2	mg/L
+Cyanocobalamin	0.1	mg/L
+		
+Media	Trace metal mix A5	
+Description	1000X trace metal solution for Synechococcus elongatus PCC 7942	
+X	1000	
+Controlled vocabulary	Concentration	Units
+Boric Acid	2.86	g/L
+Manganese (II) chloride tetrahydrate	1.81	g/L
+Zinc sulfate heptahydrate	0.222	g/L
+Sodium Molybdate Dihydrate	0.39	g/L
+Copper (II) sulfate pentahydrate	0.079	g/L
+Cobalt(II) nitrate hexahydrate	49.4	mg/L
+		
+Media	Sulfur free mineral mix	
+Description	100X mineral solution for minus sulfur experiments	
+X	100	
+Controlled vocabulary	Concentration	Units
+Magnesium chloride hexahydrate	3	g/L
+Nitrilotriacetic acid disodium salt	1.5	g/L
+Sodium Chloride	1	g/L
+Manganese (II) chloride tetrahydrate	0.5	g/L
+Cobalt chloride hexahydrate	0.1	g/L
+Zinc chloride	0.13	g/L
+Calcium Chloride Dihydrate	0.1	g/L
+Iron (II) chloride tetrahydrate	0.1	g/L
+Nickel (II) chloride hexahydrate	0.025	g/L
+Potassium aluminum chloride	0.02	g/L
+copper (II) chloride dihydrate	0.01	g/L
+Boric Acid	0.01	g/L
+Sodium Molybdate Dihydrate	0.01	g/L
+Sodium selenite pentahydrate	0.3	mg/L
+Sodium tungstate dihydrate	0.25	mg/L
+		
+Media	Thauer's vitamin mix	
+Description	1000X vitamin solution (based on Thauer's formulation)	
+X	1000	
+Controlled vocabulary	Concentration	Units
+pyridoxine HCl	10	mg/L
+4-Aminobenzoic acid	5	mg/L
+Lipoic acid	5	mg/L
+Nicotinic Acid	5	mg/L
+Riboflavin	5	mg/L
+thiamine HCl	5	mg/L
+calcium pantothenate	5	mg/L
+biotin	2	mg/L
+Folic Acid	2	mg/L
+Cyanocobalamin	0.1	mg/L
+Choline chloride	200	mg/L
+		
+		
+Media	20AA_mix	
+Description	AA solution for cultivation of auxotrophs	
+X	1	
+Controlled vocabulary	Concentration	Units
+L-Arginine	0.5	mM
+L-Histidine	0.5	mM
+L-Lysine	0.5	mM
+L-Aspartic Acid	0.5	mM
+L-Glutamic acid monopotassium salt monohydrate	0.5	mM
+L-Serine	0.5	mM
+L-Threonine	0.5	mM
+L-Asparagine	0.5	mM
+L-Glutamine	0.5	mM
+L-Cysteine hydrochloride monohydrate	0.5	mM
+Glycine	0.5	mM
+L-Proline	0.5	mM
+L-Alanine	0.5	mM
+L-Valine	0.5	mM
+L-Isoleucine	0.5	mM
+L-Leucine	0.5	mM
+L-Methionine	0.5	mM
+L-Phenylalanine	0.5	mM
+L-tyrosine disodium salt	0.5	mM
+L-Tryptophan	0.5	mM
+		
+Media	Mineral 3B solution	
+Description	mineral mix for B. theta defined medium	
+X	1	
+Controlled vocabulary	Concentration	Units
+Potassium phosphate monobasic	6.6	mM
+Sodium Chloride	15.4	mM
+Magnesium chloride hexahydrate	98	uM
+Calcium chloride dihydrate	176.5	uM
+Cobalt chloride hexahydrate	4.2	uM
+Manganese (II) chloride tetrahydrate	50.5	uM
+Ammonium chloride	9.3	mM
+Sodium sulfate	1.75	mM
+		
+Media	Mineral 3B solution minus Nitrogen	
+Description	mineral mix for B. theta defined medium without nitrogen	
+X	1	
+Controlled vocabulary	Concentration	Units
+Potassium phosphate monobasic	6.6	mM
+Sodium Chloride	15.4	mM
+Magnesium chloride hexahydrate	98	uM
+Calcium chloride dihydrate	176.5	uM
+Cobalt chloride hexahydrate	4.2	uM
+Manganese (II) chloride tetrahydrate	50.5	uM
+Sodium sulfate	1.75	mM
+		
+Media	Thauer's vitamin mix no Biotin	
+Description	1000X vitamin solution (based on Thauer's formulation)	
+X	1000	
+Controlled vocabulary	Concentration	Units
+pyridoxine HCl	10	mg/L
+4-Aminobenzoic acid	5	mg/L
+Lipoic acid	5	mg/L
+Nicotinic Acid	5	mg/L
+Riboflavin	5	mg/L
+thiamine HCl	5	mg/L
+calcium pantothenate	5	mg/L
+Folic Acid	2	mg/L
+Cyanocobalamin	0.1	mg/L
+Choline chloride	200	mg/L
+		
+Media	Ile_Leu_Val_mix	
+Description	amino acid mix for R. rubrum	
+X	1	
+Controlled vocabulary	Concentration	Units
+L-Valine	10	mM
+L-Isoleucine	10	mM
+L-Leucine	10	mM
+		
+Media	Glu_DLac_Acetate_mix	
+Description	carbon source mix used by Trenton	
+X	1	
+Controlled vocabulary	Concentration	Units
+D-Glucose	8	mM
+Sodium D-Lactate	8	mM
+Potassium acetate	8	mM
+		
+Media	ferric malate solution	
+Description	ferric malate solution for MG media	
+X	100	
+Controlled vocabulary	Concentration	Units
+Ferric chloride	0.486	mg/L
+D,L-Malic Acid	1.207	mg/L
+		
+Media	Modified Wolfe's Minerals	
+Description	Modified Wolfe's Minerals for MG media	
+X	200	
+Controlled vocabulary	Concentration	Units
+Nitrilotriacetic acid	1.5	g/L
+Magnesium sulfate	1.465	g/L
+Manganese (II) sulfate monohydrate	0.5	g/L
+Sodium Chloride	1	g/L
+Cobalt chloride hexahydrate	0.1	g/L
+Calcium Chloride Dihydrate	0.1	g/L
+Zinc sulfate heptahydrate	0.1	g/L
+Aluminum potassium sulfate dodecahydrate	0.02	g/L
+Boric Acid	0.01	g/L
+Sodium Molybdate Dihydrate	0.01	g/L
+		
+Media	20AA_mix_minus_Arg	
+Description	AA solution for cultivation of auxotrophs minus L-Arginine	
+X	1	
+Controlled vocabulary	Concentration	Units
+L-Histidine	0.5	mM
+L-Lysine	0.5	mM
+L-Aspartic Acid	0.5	mM
+L-Glutamic acid monopotassium salt monohydrate	0.5	mM
+L-Serine	0.5	mM
+L-Threonine	0.5	mM
+L-Asparagine	0.5	mM
+L-Glutamine	0.5	mM
+L-Cysteine hydrochloride monohydrate	0.5	mM
+Glycine	0.5	mM
+L-Proline	0.5	mM
+L-Alanine	0.5	mM
+L-Valine	0.5	mM
+L-Isoleucine	0.5	mM
+L-Leucine	0.5	mM
+L-Methionine	0.5	mM
+L-Phenylalanine	0.5	mM
+L-tyrosine disodium salt	0.5	mM
+L-Tryptophan	0.5	mM
+		
+Media	20AA_mix_minus_His	
+Description	AA solution for cultivation of auxotrophs minus L-Histidine	
+X	1	
+Controlled vocabulary	Concentration	Units
+L-Arginine	0.5	mM
+L-Lysine	0.5	mM
+L-Aspartic Acid	0.5	mM
+L-Glutamic acid monopotassium salt monohydrate	0.5	mM
+L-Serine	0.5	mM
+L-Threonine	0.5	mM
+L-Asparagine	0.5	mM
+L-Glutamine	0.5	mM
+L-Cysteine hydrochloride monohydrate	0.5	mM
+Glycine	0.5	mM
+L-Proline	0.5	mM
+L-Alanine	0.5	mM
+L-Valine	0.5	mM
+L-Isoleucine	0.5	mM
+L-Leucine	0.5	mM
+L-Methionine	0.5	mM
+L-Phenylalanine	0.5	mM
+L-tyrosine disodium salt	0.5	mM
+L-Tryptophan	0.5	mM
+		
+Media	20AA_mix_minus_Lys	
+Description	AA solution for cultivation of auxotrophs minus L-Lysine	
+X	1	
+Controlled vocabulary	Concentration	Units
+L-Arginine	0.5	mM
+L-Histidine	0.5	mM
+L-Aspartic Acid	0.5	mM
+L-Glutamic acid monopotassium salt monohydrate	0.5	mM
+L-Serine	0.5	mM
+L-Threonine	0.5	mM
+L-Asparagine	0.5	mM
+L-Glutamine	0.5	mM
+L-Cysteine hydrochloride monohydrate	0.5	mM
+Glycine	0.5	mM
+L-Proline	0.5	mM
+L-Alanine	0.5	mM
+L-Valine	0.5	mM
+L-Isoleucine	0.5	mM
+L-Leucine	0.5	mM
+L-Methionine	0.5	mM
+L-Phenylalanine	0.5	mM
+L-tyrosine disodium salt	0.5	mM
+L-Tryptophan	0.5	mM
+		
+Media	20AA_mix_minus_Asp	
+Description	AA solution for cultivation of auxotrophs minus L-Aspartic Acid	
+X	1	
+Controlled vocabulary	Concentration	Units
+L-Arginine	0.5	mM
+L-Histidine	0.5	mM
+L-Lysine	0.5	mM
+L-Glutamic acid monopotassium salt monohydrate	0.5	mM
+L-Serine	0.5	mM
+L-Threonine	0.5	mM
+L-Asparagine	0.5	mM
+L-Glutamine	0.5	mM
+L-Cysteine hydrochloride monohydrate	0.5	mM
+Glycine	0.5	mM
+L-Proline	0.5	mM
+L-Alanine	0.5	mM
+L-Valine	0.5	mM
+L-Isoleucine	0.5	mM
+L-Leucine	0.5	mM
+L-Methionine	0.5	mM
+L-Phenylalanine	0.5	mM
+L-tyrosine disodium salt	0.5	mM
+L-Tryptophan	0.5	mM
+		
+Media	20AA_mix_minus_Glu	
+Description	AA solution for cultivation of auxotrophs minus L-Glutamic acid monopotassium salt monohydrate	
+X	1	
+Controlled vocabulary	Concentration	Units
+L-Arginine	0.5	mM
+L-Histidine	0.5	mM
+L-Lysine	0.5	mM
+L-Aspartic Acid	0.5	mM
+L-Serine	0.5	mM
+L-Threonine	0.5	mM
+L-Asparagine	0.5	mM
+L-Glutamine	0.5	mM
+L-Cysteine hydrochloride monohydrate	0.5	mM
+Glycine	0.5	mM
+L-Proline	0.5	mM
+L-Alanine	0.5	mM
+L-Valine	0.5	mM
+L-Isoleucine	0.5	mM
+L-Leucine	0.5	mM
+L-Methionine	0.5	mM
+L-Phenylalanine	0.5	mM
+L-tyrosine disodium salt	0.5	mM
+L-Tryptophan	0.5	mM
+		
+Media	20AA_mix_minus_Ser	
+Description	AA solution for cultivation of auxotrophs minus L-Serine	
+X	1	
+Controlled vocabulary	Concentration	Units
+L-Arginine	0.5	mM
+L-Histidine	0.5	mM
+L-Lysine	0.5	mM
+L-Aspartic Acid	0.5	mM
+L-Glutamic acid monopotassium salt monohydrate	0.5	mM
+L-Threonine	0.5	mM
+L-Asparagine	0.5	mM
+L-Glutamine	0.5	mM
+L-Cysteine hydrochloride monohydrate	0.5	mM
+Glycine	0.5	mM
+L-Proline	0.5	mM
+L-Alanine	0.5	mM
+L-Valine	0.5	mM
+L-Isoleucine	0.5	mM
+L-Leucine	0.5	mM
+L-Methionine	0.5	mM
+L-Phenylalanine	0.5	mM
+L-tyrosine disodium salt	0.5	mM
+L-Tryptophan	0.5	mM
+		
+Media	20AA_mix_minus_Thr	
+Description	AA solution for cultivation of auxotrophs minus L-Threonine	
+X	1	
+Controlled vocabulary	Concentration	Units
+L-Arginine	0.5	mM
+L-Histidine	0.5	mM
+L-Lysine	0.5	mM
+L-Aspartic Acid	0.5	mM
+L-Glutamic acid monopotassium salt monohydrate	0.5	mM
+L-Serine	0.5	mM
+L-Asparagine	0.5	mM
+L-Glutamine	0.5	mM
+L-Cysteine hydrochloride monohydrate	0.5	mM
+Glycine	0.5	mM
+L-Proline	0.5	mM
+L-Alanine	0.5	mM
+L-Valine	0.5	mM
+L-Isoleucine	0.5	mM
+L-Leucine	0.5	mM
+L-Methionine	0.5	mM
+L-Phenylalanine	0.5	mM
+L-tyrosine disodium salt	0.5	mM
+L-Tryptophan	0.5	mM
+		
+Media	20AA_mix_minus_Asn	
+Description	AA solution for cultivation of auxotrophs minus L-Asparagine	
+X	1	
+Controlled vocabulary	Concentration	Units
+L-Arginine	0.5	mM
+L-Histidine	0.5	mM
+L-Lysine	0.5	mM
+L-Aspartic Acid	0.5	mM
+L-Glutamic acid monopotassium salt monohydrate	0.5	mM
+L-Serine	0.5	mM
+L-Threonine	0.5	mM
+L-Glutamine	0.5	mM
+L-Cysteine hydrochloride monohydrate	0.5	mM
+Glycine	0.5	mM
+L-Proline	0.5	mM
+L-Alanine	0.5	mM
+L-Valine	0.5	mM
+L-Isoleucine	0.5	mM
+L-Leucine	0.5	mM
+L-Methionine	0.5	mM
+L-Phenylalanine	0.5	mM
+L-tyrosine disodium salt	0.5	mM
+L-Tryptophan	0.5	mM
+		
+Media	20AA_mix_minus_Gln	
+Description	AA solution for cultivation of auxotrophs minus L-Glutamine	
+X	1	
+Controlled vocabulary	Concentration	Units
+L-Arginine	0.5	mM
+L-Histidine	0.5	mM
+L-Lysine	0.5	mM
+L-Aspartic Acid	0.5	mM
+L-Glutamic acid monopotassium salt monohydrate	0.5	mM
+L-Serine	0.5	mM
+L-Threonine	0.5	mM
+L-Asparagine	0.5	mM
+L-Cysteine hydrochloride monohydrate	0.5	mM
+Glycine	0.5	mM
+L-Proline	0.5	mM
+L-Alanine	0.5	mM
+L-Valine	0.5	mM
+L-Isoleucine	0.5	mM
+L-Leucine	0.5	mM
+L-Methionine	0.5	mM
+L-Phenylalanine	0.5	mM
+L-tyrosine disodium salt	0.5	mM
+L-Tryptophan	0.5	mM
+		
+Media	20AA_mix_minus_Cys	
+Description	AA solution for cultivation of auxotrophs minus L-Cysteine hydrochloride monohydrate	
+X	1	
+Controlled vocabulary	Concentration	Units
+L-Arginine	0.5	mM
+L-Histidine	0.5	mM
+L-Lysine	0.5	mM
+L-Aspartic Acid	0.5	mM
+L-Glutamic acid monopotassium salt monohydrate	0.5	mM
+L-Serine	0.5	mM
+L-Threonine	0.5	mM
+L-Asparagine	0.5	mM
+L-Glutamine	0.5	mM
+Glycine	0.5	mM
+L-Proline	0.5	mM
+L-Alanine	0.5	mM
+L-Valine	0.5	mM
+L-Isoleucine	0.5	mM
+L-Leucine	0.5	mM
+L-Methionine	0.5	mM
+L-Phenylalanine	0.5	mM
+L-tyrosine disodium salt	0.5	mM
+L-Tryptophan	0.5	mM
+		
+Media	20AA_mix_minus_Gly	
+Description	AA solution for cultivation of auxotrophs minus Glycine	
+X	1	
+Controlled vocabulary	Concentration	Units
+L-Arginine	0.5	mM
+L-Histidine	0.5	mM
+L-Lysine	0.5	mM
+L-Aspartic Acid	0.5	mM
+L-Glutamic acid monopotassium salt monohydrate	0.5	mM
+L-Serine	0.5	mM
+L-Threonine	0.5	mM
+L-Asparagine	0.5	mM
+L-Glutamine	0.5	mM
+L-Cysteine hydrochloride monohydrate	0.5	mM
+L-Proline	0.5	mM
+L-Alanine	0.5	mM
+L-Valine	0.5	mM
+L-Isoleucine	0.5	mM
+L-Leucine	0.5	mM
+L-Methionine	0.5	mM
+L-Phenylalanine	0.5	mM
+L-tyrosine disodium salt	0.5	mM
+L-Tryptophan	0.5	mM
+		
+Media	20AA_mix_minus_Pro	
+Description	AA solution for cultivation of auxotrophs minus L-Proline	
+X	1	
+Controlled vocabulary	Concentration	Units
+L-Arginine	0.5	mM
+L-Histidine	0.5	mM
+L-Lysine	0.5	mM
+L-Aspartic Acid	0.5	mM
+L-Glutamic acid monopotassium salt monohydrate	0.5	mM
+L-Serine	0.5	mM
+L-Threonine	0.5	mM
+L-Asparagine	0.5	mM
+L-Glutamine	0.5	mM
+L-Cysteine hydrochloride monohydrate	0.5	mM
+Glycine	0.5	mM
+L-Alanine	0.5	mM
+L-Valine	0.5	mM
+L-Isoleucine	0.5	mM
+L-Leucine	0.5	mM
+L-Methionine	0.5	mM
+L-Phenylalanine	0.5	mM
+L-tyrosine disodium salt	0.5	mM
+L-Tryptophan	0.5	mM
+		
+Media	20AA_mix_minus_Ala	
+Description	AA solution for cultivation of auxotrophs minus L-Alanine	
+X	1	
+Controlled vocabulary	Concentration	Units
+L-Arginine	0.5	mM
+L-Histidine	0.5	mM
+L-Lysine	0.5	mM
+L-Aspartic Acid	0.5	mM
+L-Glutamic acid monopotassium salt monohydrate	0.5	mM
+L-Serine	0.5	mM
+L-Threonine	0.5	mM
+L-Asparagine	0.5	mM
+L-Glutamine	0.5	mM
+L-Cysteine hydrochloride monohydrate	0.5	mM
+Glycine	0.5	mM
+L-Proline	0.5	mM
+L-Valine	0.5	mM
+L-Isoleucine	0.5	mM
+L-Leucine	0.5	mM
+L-Methionine	0.5	mM
+L-Phenylalanine	0.5	mM
+L-tyrosine disodium salt	0.5	mM
+L-Tryptophan	0.5	mM
+		
+Media	20AA_mix_minus_Val	
+Description	AA solution for cultivation of auxotrophs minus L-Valine	
+X	1	
+Controlled vocabulary	Concentration	Units
+L-Arginine	0.5	mM
+L-Histidine	0.5	mM
+L-Lysine	0.5	mM
+L-Aspartic Acid	0.5	mM
+L-Glutamic acid monopotassium salt monohydrate	0.5	mM
+L-Serine	0.5	mM
+L-Threonine	0.5	mM
+L-Asparagine	0.5	mM
+L-Glutamine	0.5	mM
+L-Cysteine hydrochloride monohydrate	0.5	mM
+Glycine	0.5	mM
+L-Proline	0.5	mM
+L-Alanine	0.5	mM
+L-Isoleucine	0.5	mM
+L-Leucine	0.5	mM
+L-Methionine	0.5	mM
+L-Phenylalanine	0.5	mM
+L-tyrosine disodium salt	0.5	mM
+L-Tryptophan	0.5	mM
+		
+Media	20AA_mix_minus_Ile	
+Description	AA solution for cultivation of auxotrophs minus L-Isoleucine	
+X	1	
+Controlled vocabulary	Concentration	Units
+L-Arginine	0.5	mM
+L-Histidine	0.5	mM
+L-Lysine	0.5	mM
+L-Aspartic Acid	0.5	mM
+L-Glutamic acid monopotassium salt monohydrate	0.5	mM
+L-Serine	0.5	mM
+L-Threonine	0.5	mM
+L-Asparagine	0.5	mM
+L-Glutamine	0.5	mM
+L-Cysteine hydrochloride monohydrate	0.5	mM
+Glycine	0.5	mM
+L-Proline	0.5	mM
+L-Alanine	0.5	mM
+L-Valine	0.5	mM
+L-Leucine	0.5	mM
+L-Methionine	0.5	mM
+L-Phenylalanine	0.5	mM
+L-tyrosine disodium salt	0.5	mM
+L-Tryptophan	0.5	mM
+		
+Media	20AA_mix_minus_Leu	
+Description	AA solution for cultivation of auxotrophs minus L-Leucine	
+X	1	
+Controlled vocabulary	Concentration	Units
+L-Arginine	0.5	mM
+L-Histidine	0.5	mM
+L-Lysine	0.5	mM
+L-Aspartic Acid	0.5	mM
+L-Glutamic acid monopotassium salt monohydrate	0.5	mM
+L-Serine	0.5	mM
+L-Threonine	0.5	mM
+L-Asparagine	0.5	mM
+L-Glutamine	0.5	mM
+L-Cysteine hydrochloride monohydrate	0.5	mM
+Glycine	0.5	mM
+L-Proline	0.5	mM
+L-Alanine	0.5	mM
+L-Valine	0.5	mM
+L-Isoleucine	0.5	mM
+L-Methionine	0.5	mM
+L-Phenylalanine	0.5	mM
+L-tyrosine disodium salt	0.5	mM
+L-Tryptophan	0.5	mM
+		
+Media	20AA_mix_minus_Met	
+Description	AA solution for cultivation of auxotrophs minus L-Methionine	
+X	1	
+Controlled vocabulary	Concentration	Units
+L-Arginine	0.5	mM
+L-Histidine	0.5	mM
+L-Lysine	0.5	mM
+L-Aspartic Acid	0.5	mM
+L-Glutamic acid monopotassium salt monohydrate	0.5	mM
+L-Serine	0.5	mM
+L-Threonine	0.5	mM
+L-Asparagine	0.5	mM
+L-Glutamine	0.5	mM
+L-Cysteine hydrochloride monohydrate	0.5	mM
+Glycine	0.5	mM
+L-Proline	0.5	mM
+L-Alanine	0.5	mM
+L-Valine	0.5	mM
+L-Isoleucine	0.5	mM
+L-Leucine	0.5	mM
+L-Phenylalanine	0.5	mM
+L-tyrosine disodium salt	0.5	mM
+L-Tryptophan	0.5	mM
+		
+Media	20AA_mix_minus_Phe	
+Description	AA solution for cultivation of auxotrophs minus L-Phenylalanine	
+X	1	
+Controlled vocabulary	Concentration	Units
+L-Arginine	0.5	mM
+L-Histidine	0.5	mM
+L-Lysine	0.5	mM
+L-Aspartic Acid	0.5	mM
+L-Glutamic acid monopotassium salt monohydrate	0.5	mM
+L-Serine	0.5	mM
+L-Threonine	0.5	mM
+L-Asparagine	0.5	mM
+L-Glutamine	0.5	mM
+L-Cysteine hydrochloride monohydrate	0.5	mM
+Glycine	0.5	mM
+L-Proline	0.5	mM
+L-Alanine	0.5	mM
+L-Valine	0.5	mM
+L-Isoleucine	0.5	mM
+L-Leucine	0.5	mM
+L-Methionine	0.5	mM
+L-tyrosine disodium salt	0.5	mM
+L-Tryptophan	0.5	mM
+		
+Media	20AA_mix_minus_Tyr	
+Description	AA solution for cultivation of auxotrophs minus L-tyrosine disodium salt	
+X	1	
+Controlled vocabulary	Concentration	Units
+L-Arginine	0.5	mM
+L-Histidine	0.5	mM
+L-Lysine	0.5	mM
+L-Aspartic Acid	0.5	mM
+L-Glutamic acid monopotassium salt monohydrate	0.5	mM
+L-Serine	0.5	mM
+L-Threonine	0.5	mM
+L-Asparagine	0.5	mM
+L-Glutamine	0.5	mM
+L-Cysteine hydrochloride monohydrate	0.5	mM
+Glycine	0.5	mM
+L-Proline	0.5	mM
+L-Alanine	0.5	mM
+L-Valine	0.5	mM
+L-Isoleucine	0.5	mM
+L-Leucine	0.5	mM
+L-Methionine	0.5	mM
+L-Phenylalanine	0.5	mM
+L-Tryptophan	0.5	mM
+		
+Media	20AA_mix_minus_Trp	
+Description	AA solution for cultivation of auxotrophs minus L-Tryptophan	
+X	1	
+Controlled vocabulary	Concentration	Units
+L-Arginine	0.5	mM
+L-Histidine	0.5	mM
+L-Lysine	0.5	mM
+L-Aspartic Acid	0.5	mM
+L-Glutamic acid monopotassium salt monohydrate	0.5	mM
+L-Serine	0.5	mM
+L-Threonine	0.5	mM
+L-Asparagine	0.5	mM
+L-Glutamine	0.5	mM
+L-Cysteine hydrochloride monohydrate	0.5	mM
+Glycine	0.5	mM
+L-Proline	0.5	mM
+L-Alanine	0.5	mM
+L-Valine	0.5	mM
+L-Isoleucine	0.5	mM
+L-Leucine	0.5	mM
+L-Methionine	0.5	mM
+L-Phenylalanine	0.5	mM
+L-tyrosine disodium salt	0.5	mM
+		
+Media	Desulfovibrio trace elements	
+Description	Trace elements for cultivation of Desulfovibrio	
+X	1	
+Controlled vocabulary	Concentration	Units
+Manganese (II) chloride tetrahydrate	15	uM
+Cobalt chloride hexahydrate	7.8	uM
+Zinc chloride	9	uM
+Sodium molybdate	1.26	uM
+Boric Acid	1.92	uM
+Nickel (II) sulfate hexahydrate	2.28	uM
+copper (II) chloride dihydrate	0.06	uM
+Sodium selenite pentahydrate	0.21	uM
+Sodium tungstate dihydrate	0.144	uM
+		
+Media	Northen_Exometabolite_mix_1	
+Description	Exometabolite mix	
+X	10	
+Controlled vocabulary	Concentration	Units
+D-Mannitol	880.5	uM
+D-Glucose	824.8	uM
+D-Fructose	806.5	uM
+D-Trehalose dihydrate	561.8	uM
+D-Arabinose	207.6	uM
+D-Maltose monohydrate	165.4	uM
+Arabitol	105.2	uM
+L-Leucine	60	uM
+L-Isoleucine	60	uM
+Glycine	40	uM
+L-Arginine	40	uM
+L-Proline	40	uM
+L-Threonine	40	uM
+L-Lysine	40	uM
+L-Phenylalanine	40	uM
+D-Mannose	39.4	uM
+Uridine	22.5	uM
+Carnitine Hydrochloride	20	uM
+L-Asparagine	20	uM
+L-Serine	20	uM
+L-Valine	20	uM
+L-tyrosine	20	uM
+L-Tryptophan	20	uM
+L-Methionine	20	uM
+L-Glutamic acid monopotassium salt monohydrate	20	uM
+L-Citrulline	20	uM
+L-Aspartic Acid	20	uM
+L-Alanine	20	uM
+L-Histidine	20	uM
+L-Glutamine	20	uM
+4-Guanidinobutyric acid	5.9	uM
+Hypoxanthine	4.2	uM
+Uracil	3.2	uM
+Thiamine HCl	3.2	uM
+Guanine	3.2	uM
+Cytosine	3.2	uM
+Adenine hydrochloride hydrate	3.2	uM
+Thymidine	2.6	uM
+spermidine	2.6	uM
+Orotic acid	2.6	uM
+Inosine	2.6	uM
+2'-Deoxyinosine	2.6	uM
+Cytidine	2.6	uM
+Choline chloride	2.6	uM
+Adenosine	2.6	uM
+2'-Deoxyuridine	2.6	uM
