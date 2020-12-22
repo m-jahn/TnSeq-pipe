@@ -12,10 +12,14 @@ The purpose of the following guide is to provide a simple, step-wise procedure f
 - a DNA alignment software, the default here is `blat`. It can be downloaded [here](http://hgdownload.soe.ucsc.edu/downloads.html#source_downloads)
 - Perl scripts from [Morgan Price's Feba repository](https://bitbucket.org/berkeleylab/feba/src/master/), A. Arkin lab, Berkeley (see `feba/bin/`)
 - `Fastq` sequencing data as obtained from Illumina runs (see `data/fastq`)
-- Reference genome in `.fasta` format (see `ref/`)
+- Reference genome in `.fasta` format (stored in `ref/`, see description next section)
 - Model file containing the structure of the read (see `feba/primers/`)
 
-## Step 1: Read processing and mapping
+## Step 1: Prepare reference genome table
+
+Download the genome table of choice in RefSeq format (`*.gff` file) from NCBI genome. This table is then trimmed and customized so that it works flawlessly with the next steps. These modifications might need to be performed individually for each organism. An example pipeline for *Cupriavidus necator* and *Hydrogenophaga sp* can be found in `docs/prepare_ref_genome.Rmd` (R notebook).
+
+## Step 2: Read processing and mapping
 
 
 All steps follow the description of the `Feba` workflow from Morgan Price. The first step is to run the read mapping script, `MapTnSeq.pl`. The following syntax and options are used with this script.
@@ -85,7 +89,7 @@ perl MapTnSeq.pl -stepSize 7 -tileSize 7 \
 ```
 
 
-## Step 2: Filtering and quality control
+## Step 3: Filtering and quality control
 
 Quoted from the Feba repository: `DesignRandomPool.pl` uses the output of `MapTnSeq.pl` to identify barcodes that consistently map to a unique location in the genome. These are the useful barcodes. Ideally, a mutant library has even insertions across the genome; has insertions in most of the protein-coding genes (except the essential ones); has a similar number of reads for insertions in most genes (i.e., no crazy positive selection for loss of a few genes); has insertions on both strands of genes (insertions on only one strand may indicate that the resistance marker's promoter is too weak); has tens of thousands or hundreds of thousands of useful barcodes; and the useful barcodes account for most of the reads.
 
@@ -122,7 +126,7 @@ perl DesignRandomPool.pl -minN 1 \
   ../../data/mapped/H16_S2_L001_R1_001.tsv
 ```
 
-## Step 3: Transposon frequency and distribution
+## Step 4: Transposon frequency and distribution
 
 The statistical analysis of transposon insertion frequency and distribution over the genome is performed with a customized `R` notebook without using the tools from Morgan Price lab. The R notebook can be found in `docs/TnSeq-pipe.Rmd` together with the rendered output document `docs/TnSeq-pipe.nb.html`.
 
