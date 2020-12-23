@@ -39,8 +39,14 @@ The script takes the following optional arguments:
 - `--ref`, the name of the reference genome without file extension (`GCF_000009285.1_ASM928v2_genomic`)
 - `--model`, the read layout, default `model_pKMW7` (see `/feba/primers/`)
 - `--pattern`, run a subset of fastq files with a regex pattern (default: ".*")
-- `--stepSize`, matching parameter passed on to low level function (default: -7)
-- `--tileSize`, matching parameter passed on to low level function (default: -7)
+- `--stepSize`, matching parameter passed on to low level function (default: -11)
+- `--tileSize`, matching parameter passed on to low level function (default: -11)
+
+Example for running the pipeline with custom options (only files for *Cupriavidus necator* H16):
+
+```
+source/run_tnseq_mapping.sh --pattern H16.* --ref GCF_000009285.1_ASM928v2_genomic
+```
 
 ### Step 3: Transposon frequency and distribution
 

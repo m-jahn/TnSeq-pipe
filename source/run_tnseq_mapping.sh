@@ -4,8 +4,8 @@
 ref=${ref:-GCF_000009285.1_ASM928v2_genomic}
 model=${model:-model_pKMW7}
 pattern=${pattern:-".*"}
-stepSize=${stepSize:-7}
-tileSize=${tileSize:-7}
+stepSize=${stepSize:-11}
+tileSize=${tileSize:-11}
 
 # assign optional parameters that were passed with "--"
 while [ $# -gt 0 ]; do
@@ -39,7 +39,7 @@ done
 
 # make file name pattern
 filepattern=${pattern}.fastq.gz$
-echo "Input file pattern macthes: ${filepattern}"
+echo "Input file pattern matches: ${filepattern}"
 
 # read file names
 ls ${FASTQ} | grep ${filepattern} | while read fastq;
