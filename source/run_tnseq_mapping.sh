@@ -3,6 +3,7 @@
 # input parameters: reference genome, primer model
 ref=${ref:-GCF_000009285.1_ASM928v2_genomic}
 model=${model:-model_pKMW7}
+data=${data:-"data/fastq/"}
 pattern=${pattern:-".*"}
 stepSize=${stepSize:-11}
 tileSize=${tileSize:-11}
@@ -22,7 +23,7 @@ MAPTN="feba/bin/MapTnSeq.pl"
 TNPOOL="feba/bin/DesignRandomPool.pl"
 REF="ref/$ref"
 MODEL="feba/primers/$model"
-FASTQ="data/fastq/"
+FASTQ=$data
 OUT="data/mapped/"
 POOL="data/pool/"
 
@@ -40,6 +41,13 @@ done
 # make file name pattern
 filepattern=${pattern}.fastq.gz$
 echo "Input file pattern matches: ${filepattern}"
+
+filenames=(`ls ${FASTQ} | grep ${filepattern}`)
+  echo "Input files matching pattern: ${#filenames[@]}"
+if [ ${#filenames[@]} == 0 ]; then
+  echo "Found no files to process."
+fi
+
 
 # read file names
 ls ${FASTQ} | grep ${filepattern} | while read fastq;

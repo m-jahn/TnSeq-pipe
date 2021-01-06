@@ -15,11 +15,27 @@ The purpose of the following guide is to provide a simple, step-wise procedure f
 - Reference genome in `.fasta` format (stored in `ref/`, see description next section)
 - Model file containing the structure of the read (see `feba/primers/`)
 
-### Step 1: Prepare reference genome table
+### Step 1: Retrieving data from Illumina basespcae *via* command line
+
+Data in form of `*.fastq` files can be manually downloaded from the basespace website on MacOS or Windows.
+For Linux systems, only the command line option is available via Illumina's basespace client `bs-cp`. Files are in Illumina's proprietary format.
+
+```
+bs-cp -v https://basespace.illumina.com/Run/<your-run-ID> /your/target/directory/
+```
+
+The data must then be converted to `*.fastq` (plain text) files using Illumina's `bcl2fastq` tool. If it complains about indices being too similar to demultiplex, the command has to be executed with option `--barcode-mismatches 0`.
+
+```
+cd /your/target/directory/
+bcl2fastq
+```
+
+### Step 2: Prepare reference genome table
 
 Download the genome table of choice in RefSeq format (`*.gff` file) from NCBI genome. This table is then trimmed and customized so that it works flawlessly with the next steps. These modifications might need to be performed individually for each organism. An example pipeline for *Cupriavidus necator* and *Hydrogenophaga sp.* can be found in `docs/prepare_ref_genome.Rmd` (R notebook).
 
-### Step 2: Automated pipeline for barcode mapping
+### Step 3: Automated pipeline for barcode mapping
 
 The automated pipeline is a `bash` script (`run_tnseq_mapping.sh`) that will execute the two main functions for barcode mapping for all `*.fastq.gz` files in `/data/fastq/`. Result tables will be stored in `/data/mapped/`, and `data/pool/`. The steps of the pipeline follow the description of the `Feba` workflow from Morgan Price. To run the pipeline, clone the repository and make sure you are in the `TnSeq-pipe` directory.
 
@@ -38,7 +54,8 @@ The script takes the following optional arguments:
 
 - `--ref`, the name of the reference genome without file extension (`GCF_000009285.1_ASM928v2_genomic`)
 - `--model`, the read layout, default `model_pKMW7` (see `/feba/primers/`)
-- `--pattern`, run a subset of fastq files with a regex pattern (default: ".*")
+- `--data`, the directory with input fastq files (default: `data/fastq/`)
+- `--pattern`, run a subset of `fastq` files with a regex pattern (default: ".*")
 - `--stepSize`, matching parameter passed on to low level function (default: -11)
 - `--tileSize`, matching parameter passed on to low level function (default: -11)
 
@@ -48,13 +65,22 @@ Example for running the pipeline with custom options (only files for *Cupriavidu
 source/run_tnseq_mapping.sh --pattern H16.* --ref GCF_000009285.1_ASM928v2_genomic
 ```
 
-### Step 3: Transposon frequency and distribution
+### Step 4: Transposon frequency and distribution
 
-The statistical analysis of transposon insertion frequency and distribution over the genome is performed with a customized `R` notebook without using the tools from Morgan Price lab. The R notebook can be found in `docs/TnSeq-pipe.Rmd` together with the rendered output document `docs/TnSeq-pipe.nb.html`. The rendered R notebook can also be viewed directly *via* github pages using [this link](https://m-jahn.github.io/TnSeq-pipe/TnSeq-pipe.nb.html).
+The statistical analysis of transposon insertion frequency and distribution over the genome is performed with a customized `R` notebook without using the tools from Morgan Price lab. The R notebook can be found in `docs/TnSeq-pipe.Rmd` together with the rendered output document `docs/TnSeq-pipe.nb.html`. The rendered R notebook can also be viewed directly *via* github pages using [this link](https://m-jahn.github.io/TnSeq-pipe/TnSeq-pipe.nb.html). Output figures are for example:
+
+- Reads per barcode
+
+<img src="images/plot_reads_per_bc.svg" width="500px" style="display: block; margin: auto;" />
+
+- Barcode frequency mapped per chromosome location
+
+<img src="images/plot_Tns_on_genome.svg" width="500px" style="display: block; margin: auto;" />
+
 
 ----------------------------------------------
 
-### Alternative to step 2: low-level functions
+### Alternative to step 3: low-level functions
 
 #### MapTnSeq.pl
 
