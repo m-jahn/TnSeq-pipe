@@ -77,7 +77,9 @@ The statistical analysis of transposon insertion frequency and distribution over
 
 <img src="images/plot_Tns_on_genome.svg" width="500px" style="display: block; margin: auto;" />
 
+- Transposon insertion frequency per location within genes
 
+<img src="images/plot_insertion_position.svg" width="500px" style="display: block; margin: auto;" />
 ----------------------------------------------
 
 ### Alternative to step 3: low-level functions
