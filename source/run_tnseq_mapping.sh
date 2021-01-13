@@ -64,11 +64,10 @@ ls ${FASTQ} | grep ${filepattern} | while read fastq;
       -first ${FASTQ}/${fastq} \
       -unmapped ${OUT}/${ID}_unmapped.txt \
       -trunc ${OUT}/${ID}_truncated.txt \
-      >& ${OUT}${ID}.tsv
+      > ${OUT}${ID}.tsv
     done  | parallel --no-notice --bar
 # optional piping to parallel jobs.
 # use --jobs N to set max number of CPU cores
-
 
 
 # step 2: create summary table, include all barcodes (min  = 1)
