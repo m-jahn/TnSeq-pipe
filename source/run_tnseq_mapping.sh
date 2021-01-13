@@ -56,7 +56,6 @@ ls ${FASTQ} | grep ${filepattern} | while read fastq;
   do
     # extract ID of fastq.gz file
     ID=`echo ${fastq} | cut -f 1 -d \.`
-    echo "Processing ${FASTQ}/${fastq} .."
     
     perl ${MAPTN} \
       -stepSize ${stepSize} -tileSize ${tileSize} \
@@ -66,9 +65,10 @@ ls ${FASTQ} | grep ${filepattern} | while read fastq;
       -unmapped ${OUT}/${ID}_unmapped.txt \
       -trunc ${OUT}/${ID}_truncated.txt \
       >& ${OUT}${ID}.tsv
-    done
-# optional piping to parallel job
-# | parallel --no-notice --jobs 16
+    done  | parallel --no-notice --bar
+# optional piping to parallel jobs.
+# use --jobs N to set max number of CPU cores
+
 
 
 # step 2: create summary table, include all barcodes (min  = 1)
