@@ -5,6 +5,7 @@ ref=${ref:-GCF_000009285.1_ASM928v2_genomic}
 model=${model:-model_pKMW7}
 data=${data:-"data/fastq/"}
 pattern=${pattern:-".*"}
+output=${output:-"data/"}
 stepSize=${stepSize:-11}
 tileSize=${tileSize:-11}
 
@@ -24,8 +25,8 @@ TNPOOL="feba/bin/DesignRandomPool.pl"
 REF="ref/$ref"
 MODEL="feba/primers/$model"
 FASTQ=$data
-OUT="data/mapped/"
-POOL="data/pool/"
+OUT=$output"mapped/"
+POOL=$output"pool/"
 
 # if output folders are not present, create them
 for dir in $OUT $POOL
@@ -49,6 +50,7 @@ if [ ${#filenames[@]} == 0 ]; then
 fi
 
 
+# step 1: trim reads and map barcodes to reference genome
 # read file names
 ls ${FASTQ} | grep ${filepattern} | while read fastq;
   do
@@ -56,7 +58,6 @@ ls ${FASTQ} | grep ${filepattern} | while read fastq;
     ID=`echo ${fastq} | cut -f 1 -d \.`
     echo "Processing ${FASTQ}/${fastq} .."
     
-    # step 1: trim reads and map barcodes to reference genome
     perl ${MAPTN} \
       -stepSize ${stepSize} -tileSize ${tileSize} \
       -genome ${REF}.fna \
@@ -65,13 +66,15 @@ ls ${FASTQ} | grep ${filepattern} | while read fastq;
       -unmapped ${OUT}/${ID}_unmapped.txt \
       -trunc ${OUT}/${ID}_truncated.txt \
       >& ${OUT}${ID}.tsv
-    
-    # step 2: quality  control, include all barcodes (min  = 1)
-    perl ${TNPOOL} \
-      -minN 1 \
-      -pool ${POOL}${ID}_pool.tsv \
-      -genes ${REF}_trimmed.tsv \
-      ${OUT}${ID}.tsv
-  done
+    done
 # optional piping to parallel job
 # | parallel --no-notice --jobs 16
+
+
+# step 2: create summary table, include all barcodes (min  = 1)
+# can filter by N barcdes later
+perl ${TNPOOL} \
+  -minN 1 \
+  -pool ${POOL}pool.tsv \
+  -genes ${REF}_trimmed.tsv \
+  ${OUT}*.tsv

@@ -37,17 +37,17 @@ Download the genome table of choice in RefSeq format (`*.gff` file) from NCBI ge
 
 ### Step 3: Automated pipeline for barcode mapping
 
-The automated pipeline is a `bash` script (`run_tnseq_mapping.sh`) that will execute the two main functions for barcode mapping for all `*.fastq.gz` files in `/data/fastq/`. Result tables will be stored in `/data/mapped/`, and `data/pool/`. The steps of the pipeline follow the description of the `Feba` workflow from Morgan Price. To run the pipeline, clone the repository and make sure you are in the `TnSeq-pipe` directory.
+The automated pipeline is a `bash` script (`run_tnseq_mapping.sh`) that will execute the two main functions for barcode mapping for all `*.fastq.gz` files in `/data/fastq/`. Result tables will be stored in `/data/mapped/`, and `data/pool/` by default. One pool file is created for all input files. The steps of the pipeline follow the description of the `Feba` workflow from Morgan Price. To run the pipeline, clone the repository and make sure you are in the `TnSeq-pipe` directory:
 
 ```
 git clone https://github.com/m-jahn/TnSeq-pipe
 cd TnSeq-pipe
 ```
 
-Then execute in a terminal:
+Then process for example all sequencing files for *R. eutropha* H16
 
 ```
-source/run_tnseq_mapping.sh
+source/run_tnseq_mapping.sh --pattern H16.*
 ```
 
 The script takes the following optional arguments:
@@ -55,7 +55,8 @@ The script takes the following optional arguments:
 - `--ref`, the name of the reference genome without file extension (`GCF_000009285.1_ASM928v2_genomic`)
 - `--model`, the read layout, default `model_pKMW7` (see `/feba/primers/`)
 - `--data`, the directory with input fastq files (default: `data/fastq/`)
-- `--pattern`, run a subset of `fastq` files with a regex pattern (default: ".*")
+- `--pattern`, run a subset of `fastq` files with a regex pattern (default: `.*`)
+- `--output`, the directory where results are saved (default: `data/`)
 - `--stepSize`, matching parameter passed on to low level function (default: -11)
 - `--tileSize`, matching parameter passed on to low level function (default: -11)
 
@@ -112,12 +113,12 @@ In a terminal, run the following command with customized file paths. The example
 ```
 perl feba/bin/MapTnSeq.pl \
   -stepSize 7 -tileSize 7 \
-  -genome ../../ref/GCF_000009285.1_ASM928v2_genomic.fna \
-  -model ../primers/model_pKMW7 \
-  -first ../../data/fastq/H16_S2_L001_R1_001.fastq.gz \
-  -unmapped ../../data/mapped/H16_S2_L001_R1_001_unmapped.txt \
-  -trunc ../../data/mapped/H16_S2_L001_R1_001_truncated.txt \
-  > ../../data/mapped/H16_S2_L001_R1_001.tsv
+  -genome ref/GCF_000009285.1_ASM928v2_genomic.fna \
+  -model feba/primers/model_pKMW7 \
+  -first data/fastq/H16_S2_L001_R1_001.fastq.gz \
+  -unmapped data/mapped/H16_S2_L001_R1_001_unmapped.txt \
+  -trunc data/mapped/H16_S2_L001_R1_001_truncated.txt \
+  > data/mapped/H16_S2_L001_R1_001.tsv
 ```
 
 #### DesignRandomPool.pl
@@ -138,11 +139,11 @@ The genes table must include the fields `scaffoldId, begin, end, strand, desc` a
 
 **Example**
 
-Run the the following function in a terminal. Output is a tab-separated table with one unique transposn/barcode per row, its frequency and other data.
+Run the the following function in a terminal. Output is a tab-separated table with one unique transposn/barcode per row, its frequency and other data. All mapping tables matching the input pattern will be used to create the pool file (e.g `data/mapped/*.tsv` matches all `tsv` files).
 
 ```
 perl feba/bin/DesignRandomPool.pl -minN 1 \
-  -pool ../../data/pool/H16_barcode_pool.tsv \
-  -genes ../../ref/GCF_000009285.1_ASM928v2_genomic_trimmed.tsv \
-  ../../data/mapped/H16_S2_L001_R1_001.tsv
+  -pool data/pool/H16_barcode_pool.tsv \
+  -genes ref/GCF_000009285.1_ASM928v2_genomic_trimmed.tsv \
+  data/mapped/H16_S2_L001_R1_001.tsv
 ```
