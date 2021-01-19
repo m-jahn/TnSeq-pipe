@@ -18,7 +18,6 @@ This R notebook is a bioinformatics pipeline to map reads from a barcoded transp
 
 ```{bash, eval = FALSE}
 cd /path/to/TnSeq-pipe
-
 source/run_tnseq_mapping.sh --pattern H16.* --ref GCF_000009285.1_ASM928v2_genomic
 ```
 
@@ -30,6 +29,7 @@ library(latticeExtra)
 library(latticetools)
 library(tidyverse)
 library(stringi)
+library(data.table)
 ```
 
 ## Mapping statistics and distribution on genome
@@ -41,34 +41,20 @@ The next step is to inspect basic statistics of transposon insertions and their 
 First read in a pooled data table and display summary statistics. Remove barcodes without mapped position.
 
 ```{r, message = FALSE}
-# get list of pool files
-pool_files <- list.files(path = "../data/pool", 
-  pattern = "_R1_", full.names = TRUE)
-
 # import data
-df_pool <- lapply(pool_files, function(x) {
-  read_tsv(x) %>%
+df_pool <- read_tsv("../data/pool/pool.tsv") %>%
   filter(!is.na(pos))
-}) %>% bind_rows()
-
-# summarize multiple rows of same barcode to one unique observation per row
-df_pool <- df_pool %>% group_by(barcode, rcbarcode) %>%
-  summarize(
-    nTot = sum(nTot), n = sum(n),
-    across(matches("scaffold|strand|pos|n2"), function(x) {x[1]}),
-    nPastEnd = sum(nPastEnd)
-  )  %>% ungroup
 
 # import reference genome
-df_ref <- read_tsv("../ref/GCF_000009285.1_ASM928v2_genomic_trimmed.tsv")
-
-head(df_pool)
+df_ref <- read_tsv("../ref/GCF_000009285.1_ASM928v2_genomic_trimmed.tsv") %>%
+  filter(!duplicated(old_locus_tag))
 ```
 
 
 ```{r, echo = FALSE, message = FALSE}
 paste("Number of total reads:", sum(df_pool$nTot))
 paste("Number of unique barcodes:", nrow(df_pool))
+paste("Number of barcodes with >= 2 reads:", df_pool %>% filter(nTot >= 2) %>% nrow)
 paste("Number of barcodes with >= 10 reads:", df_pool %>% filter(nTot >= 10) %>% nrow)
 paste("Number of barcodes with only 1 read:", df_pool %>% filter(nTot == 1) %>% nrow)
 paste("Number of barcodes with > 1 position:", df_pool %>% filter(n2 > 0) %>% nrow)
@@ -143,48 +129,30 @@ print(plot_Tns_on_genome)
 
 ### Mapping barcodes to genes
 
-The next step before proceeding with gene mapping is to deal with barcodes that map to two different locations. Since some bacteria have multiple copies of the same operon with almost identical DNA sequence, it is good to keep ambiguous Tn insertions instead of removing them. How Transposon mutants that map to two different locations are handled depends on subsequent steps of the BarSeq protocol. The following optional transformation moves alternative, secondary mapping locations to the primary column.
 
-```{r, eval = FALSE, collapse = TRUE}
-df_pool <- df_pool %>% 
-  
-  # filter out reads that map to >= 2 alternative positions
-  select(-nPastEnd) %>% filter(n2 < 2) %>%
-  
-  # combine values to one column for gather + spread
-  unite("pos1", n, scaffold, strand, pos, sep = ";") %>%
-  unite("pos2", n2, scaffold2, strand2, pos2, sep = ";") %>%
-  
-  # gather in one column
-  gather(key, value, pos1:pos2) %>%
-  
-  # spread again
-  separate(value, into = c("n", "scaffold", "strand", "pos"), sep = ";") %>%
-  filter(scaffold != "NA") %>%
-  mutate(n = as.numeric(n), pos = as.numeric(pos))
-```
-
-----------
-
-The basic Feba scripts produce a table of barcodes, their frequencies and genomic position information. What we really want to know is how many transposons/barcodes are mapped to each gene, which position within a gene they have, how many barcodes do not map to a gene (intergenic), and how many genes were not hit by a transposon (probably essential). For this purpose we can use the function `foverlaps()` from package `data.table` to map transposon insertion sites to gene regions (or vice versa). The following part was inspired by previous work of Kyle Kimler ([github link](https://github.com/kylekimler/)).
+The basic Feba scripts produce a table of barcodes, their frequencies and genomic position information. What we really want to know is **how many transposons/barcodes are mapped to each gene, which position within a gene they have, how many barcodes do not map to a gene (intergenic, low importance), and how many genes were not hit by a transposon (probably essential)**. For this purpose we can use the function `foverlaps()` from package `data.table` to map transposon insertion sites to genes (or vice versa). The following part was inspired by previous work of Kyle Kimler ([github link](https://github.com/kylekimler/)).
 
 ```{r, message = FALSE}
-library(data.table)
-
 # prepare input data in form of data tables
-dt_pool = data.table(df_pool)
-dt_ref = data.table(df_ref)
+dt_pool <- data.table(df_pool)
+dt_ref <- data.table(df_ref)
 
 #dummy begin/end columns are created in the pool file to allow foverlap function
 dt_pool$begin <- dt_pool$pos
 dt_pool$end <- dt_pool$pos
 
+# map Tn insertion sites to genes
 setkey(dt_ref, scaffold, begin, end)
-df_pool_annotated <- foverlaps(dt_pool, dt_ref, by.x = c("scaffold", "begin", "end"), type = "within") %>%
+df_pool_annotated <- foverlaps(dt_pool, dt_ref, 
+    by.x = c("scaffold", "begin", "end"), type = "within") %>%
   as_tibble %>%
-  select(barcode, rcbarcode, nTot, scaffold, pos, begin, 
-    end, strand, i.strand, desc, old_locus_tag, new_locus_tag) %>%
-  rename(gene_strand = strand, tn_strand = i.strand)
+  select(barcode, rcbarcode, nTot, n, scaffold, i.strand, pos, begin,
+    end, strand, desc, old_locus_tag, new_locus_tag) %>%
+  rename(gene_strand = strand, strand = i.strand) %>%
+  # exclude alternative mappings in case of overlapping genes
+  filter(!duplicated(barcode)) %>%
+  # include also unhit genes in main table
+  full_join(df_ref)
 
 head(df_pool_annotated)
 ```
@@ -198,9 +166,11 @@ Now that all transposons are mapped to genes (if possible), we can calculate bas
 The majority of transposon insertions should take place in gene ORFs. `NA` are intergenic regions with no annotated function.
 
 ```{r, message = FALSE}
-df_pool_annotated %>% 
+df_pool_annotated %>%
   group_by(desc) %>%
-  summarize(n_barcodes = length(unique(barcode)))
+  summarize(n_barcodes = sum(!is.na(barcode))) %>%
+  mutate(desc = replace_na(desc, "intergenic")) %>%
+  arrange(desc(n_barcodes))
 ```
 
 ----------
@@ -215,7 +185,7 @@ plot_insertions_per_gene <- df_pool_annotated %>%
   
   histogram( ~ n_barcodes, .,
   par.settings = custom.colorblind(),
-  breaks = 8,
+  breaks = 10,
   panel = function(x, ...) {
     panel.grid(h = -1, v = -1, col = grey(0.9))
     panel.histogram(x, border = "white", ...)
@@ -248,7 +218,7 @@ df_pool_annotated <- df_pool_annotated %>%
   mutate(
     gene_length = end-begin,
     pos_relative = (pos-begin)/(end-begin),
-    central = between(pos_relative, 0.1, 0.9, NAbounds = NA)
+    central = between(pos_relative, 0.1, 0.9)
   )
 ```
 
@@ -257,7 +227,7 @@ df_pool_annotated <- df_pool_annotated %>%
 How many transposons that inserted into a gene are central? We can summarize.
 
 ```{r, message = FALSE}
-df_pool_annotated %>% 
+df_pool_annotated %>%
   filter(!is.na(central)) %>%
   group_by(central) %>%
   summarize(frequence = length(pos))
@@ -289,8 +259,8 @@ print(plot_insertion_position)
 Export the annotated pool file containing the final barcodes and their locations in the genome.
 
 ```{r}
-# save to disk
-write_tsv(df_pool_annotated, file = "../data/pool/H16_pool_combined.tsv")
+df_pool_annotated %>% filter(!is.na(barcode)) %>%
+  write_tsv("../data/pool/pool_genes.tsv")
 ```
 
 Export figures to `*.svg` image files.

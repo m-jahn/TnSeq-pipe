@@ -68,19 +68,23 @@ source/run_tnseq_mapping.sh --pattern H16.* --ref GCF_000009285.1_ASM928v2_genom
 
 ### Step 4: Transposon frequency and distribution
 
-The statistical analysis of transposon insertion frequency and distribution over the genome is performed with a customized `R` notebook without using the tools from Morgan Price lab. The R notebook can be found in `docs/TnSeq-pipe.Rmd` together with the rendered output document `docs/TnSeq-pipe.nb.html`. The rendered R notebook can also be viewed directly *via* github pages using [this link](https://m-jahn.github.io/TnSeq-pipe/TnSeq-pipe.nb.html). Output figures are for example:
+The statistical analysis of transposon insertion frequency and distribution over the genome is performed with a customized `R` notebook without using the tools from Morgan Price lab. The R notebook can be found in `docs/TnSeq-pipe.Rmd` together with the rendered output document `docs/TnSeq-pipe.nb.html`. The rendered R notebook can also be viewed directly *via* github pages using [this link](https://m-jahn.github.io/TnSeq-pipe/TnSeq-pipe.nb.html). The script generates two types of output: 
 
-- Reads per barcode
+- The *annotated* table `pool_genes.tsv` in `data/pool/` that can be used as input for the [BarSeq](https://github.com/Asplund-Samuelsson/rebar) pipeline.
+- Output figures for quality controls, for example the following:
+
+*Reads per barcode*
 
 <img src="images/plot_reads_per_bc.svg" width="500px" style="display: block; margin: auto;" />
 
-- Barcode frequency mapped per chromosome location
+*Barcode frequency mapped per chromosome location*
 
 <img src="images/plot_Tns_on_genome.svg" width="500px" style="display: block; margin: auto;" />
 
-- Transposon insertion frequency per location within genes
+*Transposon insertion frequency per location within genes*
 
 <img src="images/plot_insertion_position.svg" width="500px" style="display: block; margin: auto;" />
+
 ----------------------------------------------
 
 ### Alternative to step 3: low-level functions
