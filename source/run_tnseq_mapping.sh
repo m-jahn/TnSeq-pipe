@@ -39,14 +39,14 @@ do
   fi
 done
 
-# make file name pattern
+# make filename pattern and print file number
 filepattern=${pattern}.fastq.gz$
 echo "Input file pattern matches: ${filepattern}"
-
 filenames=(`ls ${FASTQ} | grep ${filepattern}`)
   echo "Input files matching pattern: ${#filenames[@]}"
 if [ ${#filenames[@]} == 0 ]; then
-  echo "Found no files to process."
+  echo "Found no files to process. Exiting"
+  exit
 fi
 
 
