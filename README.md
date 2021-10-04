@@ -15,25 +15,27 @@ The purpose of the following guide is to provide a simple, step-wise procedure f
 - Reference genome in `.fasta` format (stored in `ref/`, see description next section)
 - Model file containing the structure of the read (see `feba/primers/`)
 
-### Step 1: Retrieving data from Illumina basespcae *via* command line
+### Step 1: Retrieving data from Illumina basespace *via* command line (optional)
 
 Data in form of `*.fastq` files can be manually downloaded from the basespace website on MacOS or Windows.
-For Linux systems, only the command line option is available via Illumina's basespace client `bs-cp`. Files are in Illumina's proprietary format.
+For Linux systems, only the command line option is available via Illumina's basespace client `bs-cp`. Files are in Illumina's proprietary format. Execute the following line in a terminal and replace `<your-run-ID>` with the number you will find in the URL of your browser. For example, log in to basespace, navigate to `runs`, select a sequencing run and copy the ID you find in the URL: `https://basespace.illumina.com/run/200872678/details`.
 
 ```
 bs-cp -v https://basespace.illumina.com/Run/<your-run-ID> /your/target/directory/
 ```
 
-The data must then be converted to `*.fastq` (plain text) files using Illumina's `bcl2fastq` tool. If it complains about indices being too similar to demultiplex, the command has to be executed with option `--barcode-mismatches 0`.
+The data must then be converted to `*.fastq` (plain text) files using Illumina's `bcl2fastq` tool. It is recommended to run it with option `--no-lane-splitting` in order to obtain one file per sample, instead of several files subdivided by lane. If it complains about indices being too similar to demultiplex, the option `--barcode-mismatches 0` can be added.
 
 ```
 cd /your/target/directory/
-bcl2fastq
+bcl2fastq --no-lane-splitting
 ```
+
+The gzipped `*.fastq.gz` files will be stored in `./Data/Intensities/BaseCalls/`.
 
 ### Step 2: Prepare reference genome table
 
-Download the genome table of choice in RefSeq format (`*.gff` file) from NCBI genome. This table is then trimmed and customized so that it works flawlessly with the next steps. These modifications might need to be performed individually for each organism. An example pipeline for *Cupriavidus necator* and *Hydrogenophaga sp.* can be found in `docs/prepare_ref_genome.Rmd` (R notebook).
+Download the genome table of choice in RefSeq format (`*.gff` file) from NCBI genome and save it to `ref/`. In order to run the next steps of the mapping procedure, the table needs to be trimmed and locus tags (gene IDs) need to be extracted. The R script to do this for all reference genomes in `ref/` is located in `docs/prepare_ref_genome.Rmd`. It simply needs to be executed in Rstudio (recommended) or an R console. Currently, this repository contains reference genome files for *Cupriavidus necator* H16, *Hydrogenophaga sp.*, and *Oligotropha carboxidovorans* OM5.
 
 ### Step 3: Automated pipeline for barcode mapping
 

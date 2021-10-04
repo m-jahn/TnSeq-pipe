@@ -44,8 +44,8 @@ df_ref <- lapply(filenames, FUN = function(filename) {
     
     # extract old and new locustag
     mutate(
-      old_locus_tag = stri_extract_first(locus_tag, regex = "H16_[AB][0-9]*|PHG[0-9]*|HPF_[0-9]{5}"),
-      new_locus_tag = stri_extract_first(locus_tag, regex = "(H16|HPF)_RS[0-9]{5}")
+      old_locus_tag = stri_extract_first(locus_tag, regex = "H16_[AB][0-9]*|PHG[0-9]*|HPF_[0-9]{5}|OCA5_[pc][A-Z0-9]*"),
+      new_locus_tag = stri_extract_first(locus_tag, regex = "(H16|HPF|OCA5)_RS[0-9]{5}")
     ) %>%
     
     # remove old ID column
