@@ -70,7 +70,7 @@ source/run_tnseq_mapping.sh --pattern H16.* --ref GCF_000009285.1_ASM928v2_genom
 
 ### Step 4: Transposon frequency and distribution
 
-The statistical analysis of transposon insertion frequency and distribution over the genome is performed with a customized `R` notebook without using the tools from Morgan Price lab. The R notebook can be found in `docs/TnSeq-pipe.Rmd` together with the rendered output document `docs/TnSeq-pipe.nb.html`. The rendered R notebook can also be viewed directly *via* github pages using [this link](https://m-jahn.github.io/TnSeq-pipe/TnSeq-pipe.nb.html). The script generates two types of output: 
+The statistical analysis of transposon insertion frequency and distribution over the genome is performed with a customized `R` notebook without using the tools from Morgan Price lab. The R notebook can be found in `docs/TnSeq-pipe.Rmd` together with the rendered output document `docs/TnSeq-pipe.nb.html`. The rendered R notebook can also be viewed directly *via* github pages using [this link](https://m-jahn.github.io/TnSeq-pipe/TnSeq-pipe.nb.html). Note that the appropriate reference genome needs to be set at line 49 of the script. The script generates two types of output: 
 
 - The *annotated* table `pool_genes.tsv` in `data/pool/` that can be used as input for the [BarSeq](https://github.com/Asplund-Samuelsson/rebar) pipeline.
 - Output figures for quality controls, for example the following:
