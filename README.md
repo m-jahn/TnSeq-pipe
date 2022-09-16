@@ -13,7 +13,7 @@ The purpose of the following guide is to provide a simple, step-wise procedure f
 - Perl scripts from [Morgan Price's Feba repository](https://bitbucket.org/berkeleylab/feba/src/master/), A. Arkin lab, Berkeley (see `feba/bin/`)
 - `Fastq` sequencing data as obtained from Illumina runs (see `data/fastq`)
 - Reference genome in `.fasta` format (stored in `ref/`, see description next section)
-- Model file containing the structure of the read (see `feba/primers/`)
+- Model file containing the structure of the read (see `MODELS` file in `feba/primers/`for more documentation)
 
 ### Step 1: Retrieving data from Illumina basespace *via* command line (optional)
 
