@@ -18,20 +18,11 @@ The purpose of the following guide is to provide a simple, step-wise procedure f
 ### Step 1: Retrieving data from Illumina basespace *via* command line (optional)
 
 Data in form of `*.fastq` files can be manually downloaded from the basespace website on MacOS or Windows.
-For Linux systems, only the command line option is available via Illumina's basespace client `bs-cp`. Files are in Illumina's proprietary format. Execute the following line in a terminal and replace `<your-run-ID>` with the number you will find in the URL of your browser. For example, log in to basespace, navigate to `runs`, select a sequencing run and copy the ID you find in the URL: `https://basespace.illumina.com/run/200872678/details`.
+For Linux systems, only the command line option is available via Illumina's BaseSpace Sequence Hub CLI (can be downloaded [here](https://developer.basespace.illumina.com/docs/content/documentation/cli/cli-overview)). Files can be downloaded in `.fastq.gz` format for each biosample separately by executing the following line in a terminal and replacing `<your-biosample-ID>` with the number you will find in the URL of your browser. For example, log in to basespace, navigate to your run, then to `biosamples`, select a biosample and copy the ID you find in the URL: `https://basespace.illumina.com/biosamples/568408389`. Note that the files are subdivided per lane. More information can be found [here](https://developer.basespace.illumina.com/docs/content/documentation/cli/cli-examples).
 
 ```
-bs-cp -v https://basespace.illumina.com/Run/<your-run-ID> /your/target/directory/
+bs download biosample -i <your-biosample-ID> -o ./your/target/directory/
 ```
-
-The data must then be converted to `*.fastq` (plain text) files using Illumina's `bcl2fastq` tool. It is recommended to run it with option `--no-lane-splitting` in order to obtain one file per sample, instead of several files subdivided by lane. If it complains about indices being too similar to demultiplex, the option `--barcode-mismatches 0` can be added.
-
-```
-cd /your/target/directory/
-bcl2fastq --no-lane-splitting
-```
-
-The gzipped `*.fastq.gz` files will be stored in `./Data/Intensities/BaseCalls/`.
 
 ### Step 2: Prepare reference genome table
 
