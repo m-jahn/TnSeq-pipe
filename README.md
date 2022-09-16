@@ -26,7 +26,16 @@ bs download biosample -i <your-biosample-ID> -o ./your/target/directory/
 
 ### Step 2: Prepare reference genome table
 
-Download the genome table of choice in RefSeq format (`*.gff` file) from NCBI genome and save it to `ref/`. In order to run the next steps of the mapping procedure, the table needs to be trimmed and locus tags (gene IDs) need to be extracted. The R script to do this for all reference genomes in `ref/` is located in `docs/prepare_ref_genome.Rmd`. It simply needs to be executed in Rstudio (recommended) or an R console. Note that line 47 and 48 in this script are specific to extract the locus tags from *Cupriavidus necator* H16 and should be adapted for the appropriate species (an adapted version for *Caulobacter crescentus* NA1000 is already present). Currently, this repository contains reference genome files for *Cupriavidus necator* H16, *Hydrogenophaga sp.*, and *Oligotropha carboxidovorans* OM5.
+
+Download the genome table and FASTA file of choice in RefSeq format (`*.gff` and `*.fna` files, respectively) from NCBI genome and save it to 
+`ref/`. In order to run the next steps of the mapping procedure, the table needs to be trimmed and locus tags 
+(gene IDs) need to be extracted. The R script to do this for all reference genomes in `ref/` is located in 
+`docs/prepare_ref_genome.Rmd`. It simply needs to be executed in Rstudio (recommended) or an R console. Note 
+that line 47 and 48 in this script are specific to extract the locus tags from *Cupriavidus necator* H16 and 
+should be adapted for the appropriate species (an adapted version for *Caulobacter crescentus* NA1000 is 
+already present). Currently, this repository contains reference genome files for *Cupriavidus necator* H16, 
+*Hydrogenophaga sp.*, and *Oligotropha carboxidovorans* OM5 and *Caulobacter crescentus* NA1000.
+
 
 ### Step 3: Automated pipeline for barcode mapping
 
