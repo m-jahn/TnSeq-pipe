@@ -13,29 +13,24 @@ The purpose of the following guide is to provide a simple, step-wise procedure f
 - Perl scripts from [Morgan Price's Feba repository](https://bitbucket.org/berkeleylab/feba/src/master/), A. Arkin lab, Berkeley (see `feba/bin/`)
 - `Fastq` sequencing data as obtained from Illumina runs (see `data/fastq`)
 - Reference genome in `.fasta` format (stored in `ref/`, see description next section)
-- Model file containing the structure of the read (see `feba/primers/`)
+- Model file containing the structure of the read (see `MODELS` file in `feba/primers/`for more documentation)
 
 ### Step 1: Retrieving data from Illumina basespace *via* command line (optional)
 
 Data in form of `*.fastq` files can be manually downloaded from the basespace website on MacOS or Windows.
-For Linux systems, only the command line option is available via Illumina's basespace client `bs-cp`. Files are in Illumina's proprietary format. Execute the following line in a terminal and replace `<your-run-ID>` with the number you will find in the URL of your browser. For example, log in to basespace, navigate to `runs`, select a sequencing run and copy the ID you find in the URL: `https://basespace.illumina.com/run/200872678/details`.
+For Linux systems, only the command line option is available via Illumina's BaseSpace Sequence Hub CLI (can be downloaded [here](https://developer.basespace.illumina.com/docs/content/documentation/cli/cli-overview)). Files can be downloaded in `.fastq.gz` format for each biosample separately by executing the following line in a terminal and replacing `<your-biosample-ID>` with the number you will find in the URL of your browser. For example, log in to basespace, navigate to your run, then to `biosamples`, select a biosample and copy the ID you find in the URL: `https://basespace.illumina.com/biosamples/568408389`. Note that the files are subdivided per lane. More information can be found [here](https://developer.basespace.illumina.com/docs/content/documentation/cli/cli-examples).
 
 ```
-bs-cp -v https://basespace.illumina.com/Run/<your-run-ID> /your/target/directory/
+bs download biosample -i <your-biosample-ID> -o ./your/target/directory/
 ```
-
-The data must then be converted to `*.fastq` (plain text) files using Illumina's `bcl2fastq` tool. It is recommended to run it with option `--no-lane-splitting` in order to obtain one file per sample, instead of several files subdivided by lane. If it complains about indices being too similar to demultiplex, the option `--barcode-mismatches 0` can be added.
-
-```
-cd /your/target/directory/
-bcl2fastq --no-lane-splitting
-```
-
-The gzipped `*.fastq.gz` files will be stored in `./Data/Intensities/BaseCalls/`.
 
 ### Step 2: Prepare reference genome table
 
-Download the genome table of choice in RefSeq format (`*.gff` file) from NCBI genome and save it to `ref/`. In order to run the next steps of the mapping procedure, the table needs to be trimmed and locus tags (gene IDs) need to be extracted. The R script to do this for all reference genomes in `ref/` is located in `docs/prepare_ref_genome.Rmd`. It simply needs to be executed in Rstudio (recommended) or an R console. Currently, this repository contains reference genome files for *Cupriavidus necator* H16, *Hydrogenophaga sp.*, and *Oligotropha carboxidovorans* OM5.
+
+Download the genome table and FASTA file of choice in RefSeq format (`*.gff` and `*.fna` files, respectively) from NCBI genome and save it to 
+`ref/`. In order to run the next steps of the mapping procedure, the table needs to be trimmed and locus tags (gene IDs) need to be extracted. The R script to do this for all reference genomes in `ref/` is located in `docs/prepare_ref_genome.Rmd`. It simply needs to be executed in Rstudio (recommended) or an R console. Note that line 47 and 48 in this script are specific to extract the locus tags from *Cupriavidus necator* H16 and should be adapted for the appropriate species (an adapted version for *Caulobacter crescentus* NA1000 is 
+already present). Currently, this repository contains reference genome files for *Cupriavidus necator* H16, *Hydrogenophaga sp.*, and *Oligotropha carboxidovorans* OM5 and *Caulobacter crescentus* NA1000.
+
 
 ### Step 3: Automated pipeline for barcode mapping
 
@@ -70,7 +65,7 @@ source/run_tnseq_mapping.sh --pattern H16.* --ref GCF_000009285.1_ASM928v2_genom
 
 ### Step 4: Transposon frequency and distribution
 
-The statistical analysis of transposon insertion frequency and distribution over the genome is performed with a customized `R` notebook without using the tools from Morgan Price lab. The R notebook can be found in `docs/TnSeq-pipe.Rmd` together with the rendered output document `docs/TnSeq-pipe.nb.html`. The rendered R notebook can also be viewed directly *via* github pages using [this link](https://m-jahn.github.io/TnSeq-pipe/TnSeq-pipe.nb.html). The script generates two types of output: 
+The statistical analysis of transposon insertion frequency and distribution over the genome is performed with a customized `R` notebook without using the tools from Morgan Price lab. The R notebook can be found in `docs/TnSeq-pipe.Rmd` together with the rendered output document `docs/TnSeq-pipe.nb.html`. The rendered R notebook can also be viewed directly *via* github pages using [this link](https://m-jahn.github.io/TnSeq-pipe/TnSeq-pipe.nb.html). Note that the appropriate reference genome needs to be set at line 49 of the script. The script generates two types of output: 
 
 - The *annotated* table `pool_genes.tsv` in `data/pool/` that can be used as input for the [BarSeq](https://github.com/Asplund-Samuelsson/rebar) pipeline.
 - Output figures for quality controls, for example the following:
