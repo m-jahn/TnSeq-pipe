@@ -46,7 +46,7 @@ df_pool <- read_tsv("../data/pool/pool.tsv") %>%
   filter(!is.na(pos))
 
 # import reference genome
-df_ref <- read_tsv("../ref/GCF_000009285.1_ASM928v2_genomic_trimmed.tsv") %>%
+df_ref <- read_tsv("../ref/GCF_000009285.1_ASM928v2_genomic.gff") %>%
   filter(!duplicated(old_locus_tag))
 ```
 
@@ -146,13 +146,14 @@ setkey(dt_ref, scaffold, begin, end)
 df_pool_annotated <- foverlaps(dt_pool, dt_ref, 
     by.x = c("scaffold", "begin", "end"), type = "within") %>%
   as_tibble %>%
-  select(barcode, rcbarcode, nTot, n, scaffold, i.strand, pos, begin,
-    end, strand, desc, old_locus_tag, new_locus_tag) %>%
+  select(!matches("2$|^i\\.[be]")) %>%
   rename(gene_strand = strand, strand = i.strand) %>%
   # exclude alternative mappings in case of overlapping genes
   filter(!duplicated(barcode)) %>%
   # include also unhit genes in main table
-  full_join(df_ref)
+  full_join(df_ref) %>%
+  # sort by scaffold, then position
+  arrange(scaffold, begin)
 
 head(df_pool_annotated)
 ```

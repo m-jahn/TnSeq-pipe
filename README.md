@@ -24,13 +24,21 @@ For Linux systems, only the command line option is available via Illumina's Base
 bs download biosample -i <your-biosample-ID> -o ./your/target/directory/
 ```
 
-### Step 2: Prepare reference genome table
+### Step 2: Select reference genome
 
+The pipeline will automatically retrieve the correct genome sequence from NCBI.
+THe user will only need to visit NCBI genome hub and query the organism of choice:
 
-Download the genome table and FASTA file of choice in RefSeq format (`*.gff` and `*.fna` files, respectively) from NCBI genome and save it to 
-`ref/`. In order to run the next steps of the mapping procedure, the table needs to be trimmed and locus tags (gene IDs) need to be extracted. The R script to do this for all reference genomes in `ref/` is located in `docs/prepare_ref_genome.Rmd`. It simply needs to be executed in Rstudio (recommended) or an R console. Note that line 47 and 48 in this script are specific to extract the locus tags from *Cupriavidus necator* H16 and should be adapted for the appropriate species (an adapted version for *Caulobacter crescentus* NA1000 is 
-already present). Currently, this repository contains reference genome files for *Cupriavidus necator* H16, *Hydrogenophaga sp.*, and *Oligotropha carboxidovorans* OM5 and *Caulobacter crescentus* NA1000.
+https://www.ncbi.nlm.nih.gov/data-hub/genome/
 
+For example, searching for the term `Cupriavidus necator H16` will yield several entries, of which the first one is the correct one. The `Assembly` tag is the required input for the pipeline. For example:
+
+- `ASM928v2` -- _Cupriavidus necator_ H16
+- `ASM2200v1` -- _Caulobacter crescentus_ NA1000
+- `ASM21856v1` -- _Afipia_ (_Oligotropha_) _carboxidovorans_ OM5
+- `ASM435386v1` -- _Hydrogenophaga pseudoflava_ DSM 1084
+
+After running Step 3, the downloaded reference files (`<assembly>.gff`, `<assembly>.gbk`, `<assembly>.fna`) will be stored in the `./ref/` subfolder.
 
 ### Step 3: Automated pipeline for barcode mapping
 
@@ -41,15 +49,9 @@ git clone https://github.com/m-jahn/TnSeq-pipe
 cd TnSeq-pipe
 ```
 
-Then process for example all sequencing files for *R. eutropha* H16
-
-```
-source/run_tnseq_mapping.sh --pattern H16.*
-```
-
 The script takes the following optional arguments:
 
-- `--ref`, the name of the reference genome without file extension (`GCF_000009285.1_ASM928v2_genomic`)
+- `--ref`, the assembly tag from Step 2, e.g. (`ASM928v2`)
 - `--model`, the read layout, default `model_pKMW7` (see `/feba/primers/`)
 - `--data`, the directory with input fastq files (default: `data/fastq/`)
 - `--pattern`, run a subset of `fastq` files with a regex pattern (default: `.*`)
@@ -57,10 +59,10 @@ The script takes the following optional arguments:
 - `--stepSize`, matching parameter passed on to low level function (default: -11)
 - `--tileSize`, matching parameter passed on to low level function (default: -11)
 
-Example for running the pipeline with custom options (only files for *Cupriavidus necator* H16):
+For example, the following line will run the pipeline with custom options to use only `fastq.gz` files from *Cupriavidus necator* H16:
 
 ```
-source/run_tnseq_mapping.sh --pattern H16.* --ref GCF_000009285.1_ASM928v2_genomic
+source/run_tnseq_mapping.sh --pattern H16.* --ref ASM928v2
 ```
 
 ### Step 4: Transposon frequency and distribution

@@ -1,2 +1,3 @@
 data/mapped/*_unmapped.tsv
+data/pool/pool_oligotropha*
 feba/bin/blat
