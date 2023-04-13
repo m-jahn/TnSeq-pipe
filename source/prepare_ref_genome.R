@@ -19,6 +19,16 @@
 #
 #
 # Load libraries
+req_packages <- c("tidyverse", "stringi", "rentrez", "RCurl")
+if (any(!req_packages %in% rownames(installed.packages()))) {
+    stop(paste0("Not all required R packages (",
+        paste(req_packages, collapse = ", "),
+        ") are available, please install them."))
+} else {
+    message(paste0("Required R packages ",
+        paste(req_packages, collapse = ", "), " are installed"))
+}
+
 suppressPackageStartupMessages({
     library(tidyverse)
     library(stringi)

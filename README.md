@@ -9,7 +9,7 @@ The purpose of the following guide is to provide a simple, step-wise procedure f
 ### Prerequisites
 
 - Linux environment with `bash`, `perl` and `R` installed
-- the R packages `tidyverse`, `stringi`, `rentrez`, and `RCurl` (requires `libcurl`, install on ubuntu falvored linux with `sudo apt install libcurl4`)
+- the R packages `tidyverse`, `stringi`, `rentrez`, and `RCurl` (requires `libcurl`, install on ubuntu-flavored linux with `sudo apt install libcurl4`)
 - a DNA alignment software, the default here is `blat`. It can be downloaded [here](http://hgdownload.soe.ucsc.edu/downloads.html#source_downloads) and should be placed in `feba/bin/`. No compilation or setting of environmental flags is necessary. Check user permissions and make `blat` executable if it isn't (`sudo chmod u+rwx blat`).
 - Perl scripts from [Morgan Price's Feba repository](https://bitbucket.org/berkeleylab/feba/src/master/), A. Arkin lab, Berkeley (see `feba/bin/`)
 - `Fastq` sequencing data as obtained from Illumina runs (see `data/fastq`)

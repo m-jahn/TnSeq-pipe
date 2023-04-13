@@ -43,6 +43,8 @@ done
 Rscript source/prepare_ref_genome.R ${ref}
 fasta_path=`ls ${REF} | grep ${ref}.*.fna`
 gff_path=`ls ${REF} | grep ${ref}.*.gff`
+[ -f ${REF}/${fasta_path} ] || echo "FASTA file was not found in the specified path: ${REF}/${fasta_path}"
+[ -f ${REF}/${gff_path} ] || echo "GFF file was not found in the specified path: ${REF}/${gff_path}"
 
 # make filename pattern and print file number
 filepattern=${pattern}.fastq.gz$
